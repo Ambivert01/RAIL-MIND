@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@layer base {
+  :root {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+    --card: 224 71% 6%;
+    --card-foreground: 213 31% 91%;
+    --popover: 224 71% 6%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 210 100% 56%;
+    --primary-foreground: 224 71% 4%;
+    --secondary: 215 25% 16%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 215 25% 12%;
+    --muted-foreground: 217 10% 55%;
+    --accent: 215 25% 16%;
+    --accent-foreground: 213 31% 91%;
+    --destructive: 0 63% 55%;
+    --destructive-foreground: 213 31% 91%;
+    --border: 215 25% 14%;
+    --input: 215 25% 14%;
+    --ring: 210 100% 56%;
+    --radius: 0.5rem;
+    --sidebar-width: 240px;
+    --topbar-height: 56px;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  html { color-scheme: dark; }
+}
+
+/* ─── RailMind Utilities ────────────────────────────────────────────────────── */
+@layer components {
+  .card-glass {
+    @apply bg-card/80 backdrop-blur-sm border border-border/50 rounded-lg;
+  }
+
+  .risk-badge-low    { @apply bg-green-500/20  text-green-400  border border-green-500/30; }
+  .risk-badge-moderate { @apply bg-yellow-500/20 text-yellow-400 border border-yellow-500/30; }
+  .risk-badge-high   { @apply bg-orange-500/20 text-orange-400 border border-orange-500/30; }
+  .risk-badge-critical { @apply bg-red-500/20   text-red-400    border border-red-500/30; }
+
+  .status-dot-healthy  { @apply w-2 h-2 rounded-full bg-green-400 shadow-[0_0_6px_#4ade80]; }
+  .status-dot-warning  { @apply w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_6px_#facc15]; }
+  .status-dot-critical { @apply w-2 h-2 rounded-full bg-red-400 shadow-[0_0_6px_#f87171] animate-pulse; }
+  .status-dot-offline  { @apply w-2 h-2 rounded-full bg-gray-500; }
+
+  .agent-thinking {
+    @apply text-blue-400 text-xs font-mono;
+    animation: thinking 1.5s ease-in-out infinite;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar { width: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background-color: hsl(var(--border)); border-radius: 2px; }
+}
+
+/* ─── Mapbox overrides for dark theme ──────────────────────────────────────── */
+.mapboxgl-map { font-family: 'Inter', sans-serif !important; }
+.mapboxgl-popup-content {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+}
+.mapboxgl-popup-tip { display: none !important; }
+.mapboxgl-ctrl-logo { display: none !important; }
+
+/* ─── React Flow overrides ──────────────────────────────────────────────────── */
+.react-flow__background { background: hsl(var(--background)) !important; }
+.react-flow__edge-path { stroke: hsl(var(--border)) !important; stroke-width: 1.5 !important; }
+.react-flow__controls { background: hsl(var(--card)) !important; border: 1px solid hsl(var(--border)) !important; }
+.react-flow__controls-button { background: hsl(var(--card)) !important; border-color: hsl(var(--border)) !important; color: hsl(var(--foreground)) !important; }

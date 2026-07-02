@@ -1,0 +1,446 @@
+// ─── Prisma Schema ─────────────────────────────────────────────────────────────
+// RailMind - Cognitive Railway Operating System
+// PostgreSQL data model
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  ENGINEER
+  OPERATOR
+  MAINTENANCE_MANAGER
+  SAFETY_OFFICER
+  ADMINISTRATOR
+  TRAINING_OFFICER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AssetType {
+  SIGNAL
+  TRACK
+  SWITCH
+  BRIDGE
+  TUNNEL
+  CONTROL_CENTER
+  COMMUNICATION_UNIT
+}
+
+enum AssetStatus {
+  HEALTHY
+  WARNING
+  CRITICAL
+  OFFLINE
+  MAINTENANCE
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IncidentStatus {
+  OPEN
+  INVESTIGATING
+  RESOLVED
+  ARCHIVED
+}
+
+enum MaintenanceType {
+  INSPECTION
+  REPAIR
+  REPLACEMENT
+  CALIBRATION
+  UPGRADE
+  EMERGENCY_REPAIR
+  SCHEDULED_MAINTENANCE
+}
+
+enum MaintenanceOutcome {
+  SUCCESSFUL
+  PARTIAL
+  FAILED
+  DEFERRED
+}
+
+enum RecommendationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RecommendationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum RecommendationActionType {
+  MONITOR
+  INSPECT
+  REPAIR
+  REPLACE
+  ESCALATE
+  INVESTIGATE
+  SCHEDULE_MAINTENANCE
+  EMERGENCY_ACTION
+}
+
+enum AlertSeverity {
+  INFO
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  UNREAD
+  ACKNOWLEDGED
+  RESOLVED
+  ESCALATED
+}
+
+enum RiskSeverity {
+  LOW
+  MODERATE
+  HIGH
+  CRITICAL
+}
+
+// ─── Users & Auth ─────────────────────────────────────────────────────────────
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  firstName    String     @map("first_name")
+  lastName     String     @map("last_name")
+  role         UserRole   @default(ENGINEER)
+  status       UserStatus @default(ACTIVE)
+  avatarUrl    String?    @map("avatar_url")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  incidents      Incident[]    @relation("CreatedByUser")
+  notifications  Notification[]
+  maintenanceRecords MaintenanceRecord[] @relation("PerformedByUser")
+  recommendations Recommendation[] @relation("ApprovedByUser")
+  agentRuns      AgentRun[]
+  auditLogs      AuditLog[]
+
+  @@map("users")
+}
+
+// ─── Railway Infrastructure ───────────────────────────────────────────────────
+
+model Station {
+  id          String      @id @default(uuid())
+  stationCode String      @unique @map("station_code")
+  name        String
+  latitude    Decimal     @db.Decimal(10, 7)
+  longitude   Decimal     @db.Decimal(10, 7)
+  status      AssetStatus @default(HEALTHY)
+  zone        String      @default("GENERAL")
+  description String?
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  assets Asset[]
+
+  @@map("stations")
+}
+
+model Asset {
+  id                String      @id @default(uuid())
+  stationId         String      @map("station_id")
+  assetType         AssetType   @map("asset_type")
+  assetCode         String      @unique @map("asset_code")
+  name              String
+  status            AssetStatus @default(HEALTHY)
+  healthScore       Int         @default(100) @map("health_score")
+  latitude          Decimal?    @db.Decimal(10, 7)
+  longitude         Decimal?    @db.Decimal(10, 7)
+  description       String?
+  installationDate  DateTime?   @map("installation_date")
+  lastMaintenanceAt DateTime?   @map("last_maintenance_at")
+  metadata          Json?
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+
+  station            Station             @relation(fields: [stationId], references: [id])
+  incidents          Incident[]
+  maintenanceRecords MaintenanceRecord[]
+  risks              RiskRecord[]
+  alerts             Alert[]
+  recommendations    Recommendation[]
+
+  @@index([stationId])
+  @@index([assetType])
+  @@index([status])
+  @@map("assets")
+}
+
+// ─── Incidents ────────────────────────────────────────────────────────────────
+
+model Incident {
+  id             String           @id @default(uuid())
+  incidentNumber String           @unique @map("incident_number")
+  title          String
+  description    String
+  severity       IncidentSeverity
+  status         IncidentStatus   @default(OPEN)
+  assetId        String           @map("asset_id")
+  rootCause      String?          @map("root_cause")
+  resolution     String?
+  lessonsLearned String?          @map("lessons_learned")
+  weatherCondition String?        @map("weather_condition")
+  occurredAt     DateTime         @map("occurred_at")
+  resolvedAt     DateTime?        @map("resolved_at")
+  createdById    String?          @map("created_by")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  asset           Asset            @relation(fields: [assetId], references: [id])
+  createdBy       User?            @relation("CreatedByUser", fields: [createdById], references: [id])
+  events          IncidentEvent[]
+  recommendations Recommendation[]
+
+  @@index([assetId])
+  @@index([status])
+  @@index([severity])
+  @@index([occurredAt])
+  @@map("incidents")
+}
+
+model IncidentEvent {
+  id          String   @id @default(uuid())
+  incidentId  String   @map("incident_id")
+  eventType   String   @map("event_type")
+  description String
+  agentName   String?  @map("agent_name")
+  metadata    Json?
+  timestamp   DateTime @default(now())
+
+  incident Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+
+  @@index([incidentId])
+  @@index([timestamp])  // Fix 9: timeline queries sort by timestamp
+  @@map("incident_events")
+}
+
+// ─── Maintenance ──────────────────────────────────────────────────────────────
+
+model MaintenanceRecord {
+  id                String             @id @default(uuid())
+  assetId           String             @map("asset_id")
+  maintenanceType   MaintenanceType    @map("maintenance_type")
+  description       String
+  performedById     String?            @map("performed_by")
+  performedAt       DateTime           @map("performed_at")
+  outcome           MaintenanceOutcome @default(SUCCESSFUL)
+  durationHours     Float?             @map("duration_hours")
+  findings          String?
+  partsReplaced     String[]           @map("parts_replaced")
+  nextMaintenanceDue DateTime?         @map("next_maintenance_due")
+  cost              Float?
+  createdAt         DateTime           @default(now()) @map("created_at")
+
+  asset       Asset  @relation(fields: [assetId], references: [id])
+  performedBy User?  @relation("PerformedByUser", fields: [performedById], references: [id])
+
+  @@index([assetId])
+  @@index([performedAt])
+  @@map("maintenance_records")
+}
+
+// ─── Risk Intelligence ────────────────────────────────────────────────────────
+
+model RiskRecord {
+  id               String       @id @default(uuid())
+  assetId          String       @map("asset_id")
+  riskScore        Int          @map("risk_score")
+  severity         RiskSeverity
+  confidence       Int
+  possibleFailure  String?      @map("possible_failure")
+  rootCauseSummary String?      @map("root_cause_summary")
+  recommendation   String?
+  factors          Json?
+  isActive         Boolean      @default(true) @map("is_active")
+  calculatedAt     DateTime     @default(now()) @map("calculated_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  asset Asset @relation(fields: [assetId], references: [id])
+
+  @@index([assetId])
+  @@index([severity])
+  @@index([isActive])
+  @@map("risk_records")
+}
+
+// ─── Recommendations ──────────────────────────────────────────────────────────
+
+model Recommendation {
+  id                      String                  @id @default(uuid())
+  incidentId              String?                 @map("incident_id")
+  assetId                 String?                 @map("asset_id")
+  priority                RecommendationPriority
+  confidence              Int
+  action                  String
+  actionType              RecommendationActionType @map("action_type")
+  reason                  String
+  evidence                Json?
+  expectedOutcome         String?                 @map("expected_outcome")
+  estimatedResolutionTime String?                 @map("estimated_resolution_time")
+  status                  RecommendationStatus    @default(PENDING)
+  approvedById            String?                 @map("approved_by")
+  completedAt             DateTime?               @map("completed_at")
+  outcomeNote             String?                 @map("outcome_note")
+  createdAt               DateTime                @default(now()) @map("created_at")
+  updatedAt               DateTime                @updatedAt @map("updated_at")
+
+  incident   Incident? @relation(fields: [incidentId], references: [id])
+  asset      Asset?    @relation(fields: [assetId], references: [id])
+  approvedBy User?     @relation("ApprovedByUser", fields: [approvedById], references: [id])
+
+  @@index([incidentId])
+  @@index([assetId])
+  @@index([priority])
+  @@index([status])
+  @@map("recommendations")
+}
+
+// ─── Alerts ───────────────────────────────────────────────────────────────────
+
+model Alert {
+  id        String      @id @default(uuid())
+  assetId   String      @map("asset_id")
+  alertType String      @map("alert_type")
+  severity  AlertSeverity
+  message   String
+  status    AlertStatus @default(UNREAD)
+  metadata  Json?
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  asset Asset @relation(fields: [assetId], references: [id])
+
+  @@index([assetId])
+  @@index([severity])
+  @@index([status])
+  @@map("alerts")
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+model Notification {
+  id                String   @id @default(uuid())
+  userId            String   @map("user_id")
+  title             String
+  message           String
+  type              String   @default("INFO")
+  read              Boolean  @default(false)
+  relatedEntityType String?  @map("related_entity_type")
+  relatedEntityId   String?  @map("related_entity_id")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([read])
+  @@map("notifications")
+}
+
+// ─── Knowledge Base ───────────────────────────────────────────────────────────
+
+model LessonLearned {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  assetType   String?  @map("asset_type")
+  incidentId  String?  @map("incident_id")
+  tags        String[]
+  vectorId    String?  @map("vector_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([assetType])
+  @@map("lessons_learned")
+}
+
+model Procedure {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  category  String
+  version   String   @default("1.0")
+  tags      String[]
+  vectorId  String?  @map("vector_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@map("procedures")
+}
+
+// ─── AI System ────────────────────────────────────────────────────────────────
+
+model AgentRun {
+  id          String   @id @default(uuid())
+  userId      String?  @map("user_id")
+  agentName   String   @map("agent_name")
+  taskType    String   @map("task_type")
+  status      String   @default("PENDING")
+  input       Json
+  output      Json?
+  thoughts    Json?
+  errorMsg    String?  @map("error_msg")
+  startedAt   DateTime @default(now()) @map("started_at")
+  completedAt DateTime? @map("completed_at")
+  durationMs  Int?     @map("duration_ms")
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([agentName])
+  @@index([status])
+  @@index([startedAt])
+  @@index([completedAt])  // Fix 9
+  @@map("agent_runs")
+}
+
+// ─── Audit ────────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id             String   @id @default(uuid())
+  userId         String?  @map("user_id")
+  action         String
+  resourceType   String   @map("resource_type")
+  resourceId     String?  @map("resource_id")
+  metadata       Json?
+  ipAddress      String?  @map("ip_address")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([resourceType])
+  @@index([createdAt])
+  @@index([resourceType, createdAt])  // Fix 9: composite for filtered audit queries
+  @@map("audit_logs")
+}

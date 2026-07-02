@@ -1,0 +1,661 @@
+[
+  {
+    "id": "rec001",
+    "assetId": "sig011",
+    "incidentId": "inc090",
+    "priority": "CRITICAL",
+    "confidence": 92,
+    "action": "Replace relay unit on Signal S11 \u2014 third recurrence of relay corrosion pattern",
+    "actionType": "REPLACE",
+    "reason": "Signal S11 shows current anomaly consistent with relay resistance drift observed in INC-044 and INC-061. Three relay failures on same asset indicate systemic environmental vulnerability. Marine-grade relay with enhanced corrosion protection required.",
+    "evidence": [
+      {
+        "type": "INCIDENT",
+        "referenceId": "inc044",
+        "title": "INC-044",
+        "date": "2024-07-12",
+        "relevanceScore": 95,
+        "summary": "Relay corrosion \u2014 resolved by replacement"
+      },
+      {
+        "type": "INCIDENT",
+        "referenceId": "inc061",
+        "title": "INC-061",
+        "date": "2025-10-15",
+        "relevanceScore": 92,
+        "summary": "Pre-failure resistance drift \u2014 preventive relay replacement"
+      },
+      {
+        "type": "LESSON",
+        "referenceId": "lesson019",
+        "title": "Multiple Relay Failures Indicate Systemic Issue",
+        "date": "2025-10-15",
+        "relevanceScore": 88,
+        "summary": "Three or more relay failures within 18 months indicates environmental root cause"
+      }
+    ],
+    "expectedOutcome": "Elimination of current anomaly and prevention of failure for minimum 24 months with marine-grade specification",
+    "estimatedResolutionTime": "Within 24 hours",
+    "status": "PENDING"
+  },
+  {
+    "id": "rec002",
+    "assetId": "sig011",
+    "incidentId": "inc090",
+    "priority": "HIGH",
+    "confidence": 88,
+    "action": "Inspect and replace weather housing seal on Signal S11",
+    "actionType": "INSPECT",
+    "reason": "Pre-monsoon conditions approaching. INC-057 demonstrated water ingress through degraded seal. Seal replacement due.",
+    "evidence": [
+      {
+        "type": "INCIDENT",
+        "referenceId": "inc057",
+        "title": "INC-057",
+        "date": "2025-09-04",
+        "relevanceScore": 90,
+        "summary": "Water ingress through degraded seal during heavy rainfall"
+      }
+    ],
+    "expectedOutcome": "Prevention of water ingress during upcoming monsoon season",
+    "estimatedResolutionTime": "Within 48 hours",
+    "status": "PENDING"
+  },
+  {
+    "id": "rec003",
+    "assetId": "sig011",
+    "incidentId": "inc090",
+    "priority": "HIGH",
+    "confidence": 85,
+    "action": "Install continuous relay resistance monitoring on Signal S11",
+    "actionType": "REPAIR",
+    "reason": "INC-061 demonstrated that resistance drift monitoring enables preventive maintenance. S11 recurring failure pattern justifies permanent monitoring.",
+    "evidence": [
+      {
+        "type": "LESSON",
+        "referenceId": "lesson009",
+        "title": "Predictive Relay Resistance Monitoring",
+        "date": "2025-10-15",
+        "relevanceScore": 85,
+        "summary": "Resistance drift monitoring prevents failures"
+      }
+    ],
+    "expectedOutcome": "Early warning of future relay degradation allowing planned replacement vs emergency response",
+    "estimatedResolutionTime": "Within 72 hours",
+    "status": "PENDING"
+  },
+  {
+    "id": "rec004",
+    "assetId": "sig012",
+    "incidentId": "inc091",
+    "priority": "HIGH",
+    "confidence": 82,
+    "action": "Schedule immediate maintenance for Signal S12 \u2014 240 days overdue",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "reason": "S12 maintenance overdue by 240 days with adjacent S11 in critical state. INC-012 shows S12 has same failure pattern risk as S11.",
+    "evidence": [
+      {
+        "type": "INCIDENT",
+        "referenceId": "inc012",
+        "title": "INC-012",
+        "date": "2024-10-22",
+        "relevanceScore": 88,
+        "summary": "S12 relay corrosion \u2014 same zone risk as S11"
+      }
+    ],
+    "expectedOutcome": "Prevention of S12 failure during same period as S11 investigation",
+    "estimatedResolutionTime": "Within 48 hours",
+    "status": "PENDING"
+  },
+  {
+    "id": "rec005",
+    "assetId": "sw002",
+    "incidentId": "inc092",
+    "priority": "MEDIUM",
+    "confidence": 75,
+    "action": "Lubricate and inspect switch motor on SW-002",
+    "actionType": "INSPECT",
+    "reason": "Slow operation warning on SW-002. INC-023 history shows same asset susceptibility to point motor issues.",
+    "evidence": [
+      {
+        "type": "INCIDENT",
+        "referenceId": "inc023",
+        "title": "INC-023",
+        "date": "2024-11-05",
+        "relevanceScore": 80,
+        "summary": "Point motor overheating \u2014 resolved by replacement"
+      }
+    ],
+    "expectedOutcome": "Restoration of normal switch operation time (<7 seconds)",
+    "estimatedResolutionTime": "Within 72 hours",
+    "status": "PENDING"
+  },
+  {
+    "id": "rec006",
+    "assetId": "trk003",
+    "priority": "MEDIUM",
+    "confidence": 70,
+    "action": "Schedule ultrasonic inspection for Track TRK-003 \u2014 high utilization",
+    "actionType": "INSPECT",
+    "reason": "TRK-003 has not been ultrasonically inspected in 7 months. INC-031 crack detection history and high utilization status require bi-annual inspection per SOP-TRK-01.",
+    "evidence": [
+      {
+        "type": "LESSON",
+        "referenceId": "lesson012",
+        "title": "High Utilization Tracks Require Bi-Annual Inspection",
+        "date": "2025-02-16",
+        "relevanceScore": 75,
+        "summary": "Bi-annual inspection required for high utilization tracks"
+      }
+    ],
+    "expectedOutcome": "Early detection of any developing crack before failure",
+    "estimatedResolutionTime": "Within 7 days",
+    "status": "APPROVED"
+  },
+  {
+    "id": "rec007",
+    "assetId": "sig015",
+    "priority": "MEDIUM",
+    "confidence": 72,
+    "action": "Perform quarterly calibration check on Signal S15 \u2014 overdue",
+    "actionType": "INSPECT",
+    "reason": "S15 quarterly calibration is overdue. INC-038 and INC-008 history shows calibration drift risk on mountain route.",
+    "evidence": [
+      {
+        "type": "LESSON",
+        "referenceId": "lesson006",
+        "title": "Mountain Route Signals Require Quarterly Calibration",
+        "date": "2025-04-09",
+        "relevanceScore": 80,
+        "summary": "Temperature variation causes calibration drift"
+      }
+    ],
+    "expectedOutcome": "Correction of any temperature-induced calibration drift",
+    "estimatedResolutionTime": "Within 7 days",
+    "status": "PENDING"
+  },
+  {
+    "id": "rec008",
+    "assetId": "sig020",
+    "priority": "MEDIUM",
+    "confidence": 78,
+    "action": "Annual salt spray inspection for Signal S20",
+    "actionType": "INSPECT",
+    "reason": "S20 annual salt spray inspection due. INC-052 connector failure pattern. Port proximity requires marine-grade maintenance schedule.",
+    "evidence": [
+      {
+        "type": "LESSON",
+        "referenceId": "lesson008",
+        "title": "Port Proximity Requires Marine-Grade Maintenance",
+        "date": "2025-07-04",
+        "relevanceScore": 82,
+        "summary": "Annual salt spray inspection mandatory for port-adjacent signals"
+      }
+    ],
+    "expectedOutcome": "Detection of corrosion before communication failure",
+    "estimatedResolutionTime": "Within 14 days",
+    "status": "PENDING"
+  },
+  {
+    "id": "rec009",
+    "action": "Immediate relay inspection required",
+    "priority": "CRITICAL",
+    "status": "APPROVED",
+    "assetId": "sig014",
+    "incidentId": "inc0138",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Immediate relay inspection required"
+  },
+  {
+    "id": "rec010",
+    "action": "Install surge protection device on signal power feed",
+    "priority": "HIGH",
+    "status": "PENDING",
+    "assetId": "sw009",
+    "incidentId": "inc0120",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Install surge protection device on signal power feed"
+  },
+  {
+    "id": "rec011",
+    "action": "Replace housing gasket seals",
+    "priority": "MEDIUM",
+    "status": "PENDING",
+    "assetId": "sig038",
+    "incidentId": "inc0111",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Replace housing gasket seals"
+  },
+  {
+    "id": "rec012",
+    "action": "Upgrade signal cable to armored type",
+    "priority": "MEDIUM",
+    "status": "IN_PROGRESS",
+    "assetId": "sig012",
+    "incidentId": "inc012",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Upgrade signal cable to armored type"
+  },
+  {
+    "id": "rec013",
+    "action": "Recalibrate signal detector sensors",
+    "priority": "HIGH",
+    "status": "COMPLETED",
+    "assetId": "sw005",
+    "incidentId": "inc0116",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Recalibrate signal detector sensors"
+  },
+  {
+    "id": "rec014",
+    "action": "Deploy ultrasonic track testing on high-traffic sections",
+    "priority": "HIGH",
+    "status": "COMPLETED",
+    "assetId": "sw004",
+    "incidentId": "inc0115",
+    "actionType": "INSPECT",
+    "confidence": 75,
+    "reason": "Deploy ultrasonic track testing on high-traffic sections"
+  },
+  {
+    "id": "rec015",
+    "action": "Replace switch blade \u2014 gap exceeds tolerance",
+    "priority": "CRITICAL",
+    "status": "APPROVED",
+    "assetId": "sig025",
+    "incidentId": null,
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Replace switch blade \u2014 gap exceeds tolerance"
+  },
+  {
+    "id": "rec016",
+    "action": "Install redundant network path for signal communication",
+    "priority": "MEDIUM",
+    "status": "PENDING",
+    "assetId": "cc002",
+    "incidentId": null,
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Install redundant network path for signal communication"
+  },
+  {
+    "id": "rec017",
+    "action": "Replace LED driver board assembly",
+    "priority": "LOW",
+    "status": "PENDING",
+    "assetId": "sig034",
+    "incidentId": "inc0106",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Replace LED driver board assembly"
+  },
+  {
+    "id": "rec018",
+    "action": "Update relay logic controller firmware",
+    "priority": "MEDIUM",
+    "status": "PENDING",
+    "assetId": "sw002",
+    "incidentId": "inc023",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Update relay logic controller firmware"
+  },
+  {
+    "id": "rec019",
+    "action": "Relubricate switch mechanism \u2014 contaminated lubricant",
+    "priority": "LOW",
+    "status": "PENDING",
+    "assetId": "sig015",
+    "incidentId": "inc038",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Relubricate switch mechanism \u2014 contaminated lubricant"
+  },
+  {
+    "id": "rec020",
+    "action": "Clear ballast drainage channel before monsoon",
+    "priority": "HIGH",
+    "status": "PENDING",
+    "assetId": "sig017",
+    "incidentId": null,
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Clear ballast drainage channel before monsoon"
+  },
+  {
+    "id": "rec021",
+    "action": "Replace insulated track joint \u2014 corrosion detected",
+    "priority": "HIGH",
+    "status": "APPROVED",
+    "assetId": "sig032",
+    "incidentId": "inc0102",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Replace insulated track joint \u2014 corrosion detected"
+  },
+  {
+    "id": "rec022",
+    "action": "Install switch blade heating element",
+    "priority": "HIGH",
+    "status": "PENDING",
+    "assetId": "sw003",
+    "incidentId": "inc0114",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Install switch blade heating element"
+  },
+  {
+    "id": "rec023",
+    "action": "Conduct quarterly relay resistance testing",
+    "priority": "MEDIUM",
+    "status": "COMPLETED",
+    "assetId": "trk004",
+    "incidentId": "inc0121",
+    "actionType": "INSPECT",
+    "confidence": 75,
+    "reason": "Conduct quarterly relay resistance testing"
+  },
+  {
+    "id": "rec024",
+    "action": "Relocate signal control box above flood level",
+    "priority": "HIGH",
+    "status": "PENDING",
+    "assetId": "trk001",
+    "incidentId": "inc005",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Relocate signal control box above flood level"
+  },
+  {
+    "id": "rec025",
+    "action": "Replace battery backup unit \u2014 cells degraded",
+    "priority": "MEDIUM",
+    "status": "IN_PROGRESS",
+    "assetId": "sig028",
+    "incidentId": "inc0096",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Replace battery backup unit \u2014 cells degraded"
+  },
+  {
+    "id": "rec026",
+    "action": "Conduct cable insulation resistance testing",
+    "priority": "MEDIUM",
+    "status": "PENDING",
+    "assetId": "sig031",
+    "incidentId": "inc0101",
+    "actionType": "INSPECT",
+    "confidence": 75,
+    "reason": "Conduct cable insulation resistance testing"
+  },
+  {
+    "id": "rec027",
+    "action": "Install lightning protection on signal feed",
+    "priority": "CRITICAL",
+    "status": "PENDING",
+    "assetId": "sig011",
+    "incidentId": "inc044",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Install lightning protection on signal feed"
+  },
+  {
+    "id": "rec028",
+    "action": "Perform thermite weld inspection with dye penetrant",
+    "priority": "HIGH",
+    "status": "PENDING",
+    "assetId": "trk005",
+    "incidentId": "inc0122",
+    "actionType": "INSPECT",
+    "confidence": 75,
+    "reason": "Perform thermite weld inspection with dye penetrant"
+  },
+  {
+    "id": "rec029",
+    "action": "Replace switch motor \u2014 winding degradation detected",
+    "priority": "CRITICAL",
+    "status": "PENDING",
+    "assetId": "sig019",
+    "incidentId": "inc075",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Replace switch motor \u2014 winding degradation detected"
+  },
+  {
+    "id": "rec030",
+    "action": "Recalibrate switch position detector",
+    "priority": "HIGH",
+    "status": "APPROVED",
+    "assetId": "trk002",
+    "incidentId": null,
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Recalibrate switch position detector"
+  },
+  {
+    "id": "rec031",
+    "action": "Re-tamp track at low cant section",
+    "priority": "MEDIUM",
+    "status": "COMPLETED",
+    "assetId": "sig030",
+    "incidentId": "inc0100",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Re-tamp track at low cant section"
+  },
+  {
+    "id": "rec032",
+    "action": "Upgrade signal housing to IP67 rating",
+    "priority": "MEDIUM",
+    "status": "PENDING",
+    "assetId": "trk006",
+    "incidentId": "inc0123",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Upgrade signal housing to IP67 rating"
+  },
+  {
+    "id": "rec033",
+    "action": "Replace signal relay \u2014 age exceeds 15 years",
+    "priority": "HIGH",
+    "status": "PENDING",
+    "assetId": "sig026",
+    "incidentId": "inc0093",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Replace signal relay \u2014 age exceeds 15 years"
+  },
+  {
+    "id": "rec034",
+    "action": "Implement proactive relay replacement program (15-year lifecycle)",
+    "priority": "MEDIUM",
+    "status": "PENDING",
+    "assetId": "sig016",
+    "incidentId": "inc017",
+    "actionType": "MONITOR",
+    "confidence": 75,
+    "reason": "Implement proactive relay replacement program (15-year lifecycle)"
+  },
+  {
+    "id": "rec035",
+    "action": "Deploy remote condition monitoring sensors on S11 relay circuit",
+    "priority": "HIGH",
+    "status": "PENDING",
+    "assetId": "sig037",
+    "incidentId": "inc0110",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Deploy remote condition monitoring sensors on S11 relay circuit"
+  },
+  {
+    "id": "rec036",
+    "action": "Schedule emergency inspection of Signal S24 electronics",
+    "priority": "CRITICAL",
+    "status": "PENDING",
+    "assetId": "trk008",
+    "incidentId": "inc0125",
+    "actionType": "INSPECT",
+    "confidence": 75,
+    "reason": "Schedule emergency inspection of Signal S24 electronics"
+  },
+  {
+    "id": "rec037",
+    "action": "Conduct signal-wide relay resistance audit",
+    "priority": "HIGH",
+    "status": "COMPLETED",
+    "assetId": "sig023",
+    "incidentId": null,
+    "actionType": "INSPECT",
+    "confidence": 75,
+    "reason": "Conduct signal-wide relay resistance audit"
+  },
+  {
+    "id": "rec038",
+    "action": "Replace all signal gaskets in coastal zone",
+    "priority": "MEDIUM",
+    "status": "APPROVED",
+    "assetId": "sw001",
+    "incidentId": "inc070",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Replace all signal gaskets in coastal zone"
+  },
+  {
+    "id": "rec039",
+    "action": "Install CCTV on signal cable routes to deter theft",
+    "priority": "MEDIUM",
+    "status": "IN_PROGRESS",
+    "assetId": "sig039",
+    "incidentId": "inc0112",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Install CCTV on signal cable routes to deter theft"
+  },
+  {
+    "id": "rec040",
+    "action": "Conduct switch mechanism cleaning \u2014 monsoon protocol",
+    "priority": "HIGH",
+    "status": "PENDING",
+    "assetId": "sig040",
+    "incidentId": "inc0113",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Conduct switch mechanism cleaning \u2014 monsoon protocol"
+  },
+  {
+    "id": "rec041",
+    "action": "Update maintenance SOPs for LED signal heads",
+    "priority": "LOW",
+    "status": "COMPLETED",
+    "assetId": "trk007",
+    "incidentId": "inc0124",
+    "actionType": "MONITOR",
+    "confidence": 75,
+    "reason": "Update maintenance SOPs for LED signal heads"
+  },
+  {
+    "id": "rec042",
+    "action": "Monitor track gauge monthly at Curve 7A \u2014 critical section",
+    "priority": "MEDIUM",
+    "status": "PENDING",
+    "assetId": "sig013",
+    "incidentId": "inc001",
+    "actionType": "INSPECT",
+    "confidence": 75,
+    "reason": "Monitor track gauge monthly at Curve 7A \u2014 critical section"
+  },
+  {
+    "id": "rec043",
+    "action": "Activate switch heating at 2\u00b0C threshold \u2014 revise SOP",
+    "priority": "HIGH",
+    "status": "PENDING",
+    "assetId": "cc001",
+    "incidentId": null,
+    "actionType": "MONITOR",
+    "confidence": 75,
+    "reason": "Activate switch heating at 2\u00b0C threshold \u2014 revise SOP"
+  },
+  {
+    "id": "rec044",
+    "action": "Replace armored fibre optic cable on line 2",
+    "priority": "HIGH",
+    "status": "COMPLETED",
+    "assetId": "sig033",
+    "incidentId": "inc0104",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Replace armored fibre optic cable on line 2"
+  },
+  {
+    "id": "rec045",
+    "action": "Conduct signal housing inspection after heavy rainfall",
+    "priority": "MEDIUM",
+    "status": "PENDING",
+    "assetId": "sw007",
+    "incidentId": "inc0118",
+    "actionType": "INSPECT",
+    "confidence": 75,
+    "reason": "Conduct signal housing inspection after heavy rainfall"
+  },
+  {
+    "id": "rec046",
+    "action": "Train field engineers on relay replacement procedure",
+    "priority": "LOW",
+    "status": "PENDING",
+    "assetId": "sig027",
+    "incidentId": "inc0094",
+    "actionType": "MONITOR",
+    "confidence": 75,
+    "reason": "Train field engineers on relay replacement procedure"
+  },
+  {
+    "id": "rec047",
+    "action": "Implement sensor-based relay health monitoring",
+    "priority": "HIGH",
+    "status": "APPROVED",
+    "assetId": "sw006",
+    "incidentId": "inc0117",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Implement sensor-based relay health monitoring"
+  },
+  {
+    "id": "rec048",
+    "action": "Audit signal firmware versions \u2014 deploy v2.5 update",
+    "priority": "MEDIUM",
+    "status": "COMPLETED",
+    "assetId": "trk009",
+    "incidentId": "inc0126",
+    "actionType": "REPLACE",
+    "confidence": 75,
+    "reason": "Audit signal firmware versions \u2014 deploy v2.5 update"
+  },
+  {
+    "id": "rec049",
+    "action": "Replace signal S11 relay with new specification component",
+    "priority": "CRITICAL",
+    "status": "IN_PROGRESS",
+    "assetId": "sw008",
+    "incidentId": "inc0119",
+    "actionType": "SCHEDULE_MAINTENANCE",
+    "confidence": 75,
+    "reason": "Replace signal S11 relay with new specification component"
+  },
+  {
+    "id": "rec050",
+    "action": "Schedule preventive track inspection for TRK-004 through TRK-006",
+    "priority": "MEDIUM",
+    "status": "PENDING",
+    "assetId": "sig024",
+    "incidentId": null,
+    "actionType": "INSPECT",
+    "confidence": 75,
+    "reason": "Schedule preventive track inspection for TRK-004 through TRK-006"
+  }
+]

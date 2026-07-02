@@ -1,0 +1,102 @@
+[
+  {
+    "id": "st001",
+    "stationCode": "NJ-01",
+    "name": "New Junction",
+    "latitude": 28.6139,
+    "longitude": 77.2090,
+    "status": "HEALTHY",
+    "zone": "NORTH",
+    "description": "Major passenger hub and interchange station"
+  },
+  {
+    "id": "st002",
+    "stationCode": "RG-02",
+    "name": "Rivergate",
+    "latitude": 28.5500,
+    "longitude": 77.1800,
+    "status": "WARNING",
+    "zone": "NORTH",
+    "description": "Flood-prone region station — signal reliability concerns in monsoon season"
+  },
+  {
+    "id": "st003",
+    "stationCode": "HV-03",
+    "name": "Hillview",
+    "latitude": 28.7200,
+    "longitude": 77.3100,
+    "status": "HEALTHY",
+    "zone": "NORTH",
+    "description": "Mountain route station with gradient track sections"
+  },
+  {
+    "id": "st004",
+    "stationCode": "MC-04",
+    "name": "Metro Central",
+    "latitude": 28.6445,
+    "longitude": 77.2167,
+    "status": "HEALTHY",
+    "zone": "CENTRAL",
+    "description": "Highest traffic density station in the network"
+  },
+  {
+    "id": "st005",
+    "stationCode": "IH-05",
+    "name": "Industrial Hub",
+    "latitude": 28.6000,
+    "longitude": 77.2500,
+    "status": "HEALTHY",
+    "zone": "CENTRAL",
+    "description": "Freight operations and industrial siding connections"
+  },
+  {
+    "id": "st006",
+    "stationCode": "CP-06",
+    "name": "Cargo Point",
+    "latitude": 28.5800,
+    "longitude": 77.2800,
+    "status": "HEALTHY",
+    "zone": "CENTRAL",
+    "description": "Primary logistics and cargo handling facility"
+  },
+  {
+    "id": "st007",
+    "stationCode": "GF-07",
+    "name": "Greenfield",
+    "latitude": 28.5200,
+    "longitude": 77.1500,
+    "status": "HEALTHY",
+    "zone": "SOUTH",
+    "description": "Suburban corridor station serving residential areas"
+  },
+  {
+    "id": "st008",
+    "stationCode": "ST-08",
+    "name": "South Terminal",
+    "latitude": 28.4900,
+    "longitude": 77.1200,
+    "status": "HEALTHY",
+    "zone": "SOUTH",
+    "description": "Intercity junction connecting southern and central zones"
+  },
+  {
+    "id": "st009",
+    "stationCode": "PL-09",
+    "name": "Port Link",
+    "latitude": 28.4600,
+    "longitude": 77.0900,
+    "status": "HEALTHY",
+    "zone": "SOUTH",
+    "description": "Port connectivity station for maritime freight transfers"
+  },
+  {
+    "id": "st010",
+    "stationCode": "CY-10",
+    "name": "Coastal Yard",
+    "latitude": 28.4300,
+    "longitude": 77.0600,
+    "status": "HEALTHY",
+    "zone": "SOUTH",
+    "description": "Primary maintenance yard and rolling stock depot"
+  }
+]

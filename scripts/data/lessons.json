@@ -1,0 +1,227 @@
+[
+  {
+    "id": "lesson001",
+    "title": "Humidity Above 80% Accelerates Relay Corrosion",
+    "content": "In flood-prone zones where ambient humidity regularly exceeds 80%, relay corrosion progresses 3x faster than in dry zones. Standard inspection intervals of 12 months are insufficient. Recommendation: 6-month inspection cycles and marine-grade relay components for all signals in Zones RG and similar.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc044",
+    "tags": ["relay", "corrosion", "humidity", "rivergate", "inspection"]
+  },
+  {
+    "id": "lesson002",
+    "title": "Weather-Resistant Housing Seals Must Be Replaced Every 18 Months",
+    "content": "Signal housing seals degrade under UV and monsoon exposure. Failure of seals allows water ingress that causes electronic board short circuits. Replacement at 18 months prevents seal failure. Drainage channels around signal bases are mandatory in flood-prone areas.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc057",
+    "tags": ["seal", "water-ingress", "housing", "monsoon", "maintenance"]
+  },
+  {
+    "id": "lesson003",
+    "title": "Communication Connectors in Humid Environments Require Gold-Plated Marine Grade",
+    "content": "Standard copper signal connectors corrode within 12-18 months in high-humidity environments, causing intermittent SCADA communication loss. Gold-plated marine-grade connectors have demonstrated 36+ month service life under same conditions. Dielectric grease application at installation is mandatory.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc081",
+    "tags": ["connector", "corrosion", "SCADA", "communication", "marine-grade"]
+  },
+  {
+    "id": "lesson004",
+    "title": "Adjacent Signals in Same Zone Share Environmental Risk Profile",
+    "content": "When a signal failure occurs due to environmental factors (humidity, flooding, temperature), all adjacent signals in the same zone should be inspected within 48 hours. Environmental factors do not affect signals in isolation — neighboring equipment is equally exposed.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc012",
+    "tags": ["adjacent", "inspection", "risk", "zone", "environmental"]
+  },
+  {
+    "id": "lesson005",
+    "title": "Post-Monsoon Inspection of All Zone RG Signals Is Mandatory",
+    "content": "Following any monsoon season, all signals in flood-prone zones must be physically inspected within 14 days of the final monsoon rainfall. Seal integrity, connector condition, and relay resistance must all be tested. This inspection has prevented multiple failures that would have otherwise occurred in the post-monsoon period.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc065",
+    "tags": ["monsoon", "inspection", "rivergate", "post-monsoon", "mandatory"]
+  },
+  {
+    "id": "lesson006",
+    "title": "Mountain Route Signals Require Quarterly Calibration Checks",
+    "content": "Temperature differential between day (40°C) and night (5°C) on mountain routes causes relay bimetal strip expansion and calibration drift. Annual calibration is insufficient. Quarterly checks, with temperature-compensated relay housings, have eliminated drift failures on Hillview route.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc038",
+    "tags": ["calibration", "temperature", "mountain", "hillview", "quarterly"]
+  },
+  {
+    "id": "lesson007",
+    "title": "High Traffic Signals Require Load Testing at 150% Nominal Capacity",
+    "content": "Signals handling more than 12 simultaneous train movements per hour are at risk of processing overload. Annual load testing at 150% nominal capacity identifies firmware and hardware bottlenecks before peak season. Metro Central signals should be tested before holiday schedules.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc045",
+    "tags": ["load-testing", "high-traffic", "metro", "firmware", "capacity"]
+  },
+  {
+    "id": "lesson008",
+    "title": "Port Proximity Requires Marine-Grade Specifications for All External Connections",
+    "content": "Salt spray in port environments causes galvanic corrosion on standard cable connectors within 6-12 months. All signals within 2km of coastal/port infrastructure must use marine-grade specifications as standard. Annual salt spray inspection is mandatory.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc052",
+    "tags": ["port", "marine-grade", "salt-spray", "corrosion", "coastal"]
+  },
+  {
+    "id": "lesson009",
+    "title": "Predictive Relay Resistance Monitoring Prevents Failure",
+    "content": "Resistance drift above 15% of nominal value reliably predicts relay failure within 30-45 days. Installing continuous resistance monitoring on high-risk signals (those with prior relay failures) allows preventive replacement before failure. This approach eliminated unplanned downtime on S11 in October 2025.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc061",
+    "tags": ["predictive", "relay", "resistance", "monitoring", "prevention"]
+  },
+  {
+    "id": "lesson010",
+    "title": "Switch Motor Lubrication in High-Use Areas Must Be Renewed Every 3 Months",
+    "content": "Standard 6-month lubrication intervals are insufficient for switches handling more than 50 movements per day. Dried lubrication causes increased motor current draw, leading to thermal overload. 3-month renewal intervals have eliminated lubrication-related switch failures.",
+    "assetType": "SWITCH",
+    "incidentId": "inc070",
+    "tags": ["switch", "lubrication", "motor", "thermal", "maintenance"]
+  },
+  {
+    "id": "lesson011",
+    "title": "Industrial Zone Signals Require Surge Protection as Standard",
+    "content": "Power quality in industrial zones is significantly degraded by heavy machinery operations. Voltage surges up to 300% above nominal have been recorded. All signals within industrial zones must have Type 2 surge protection devices installed as standard equipment.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc075",
+    "tags": ["surge", "industrial", "power-quality", "protection", "voltage"]
+  },
+  {
+    "id": "lesson012",
+    "title": "High Utilization Tracks Require Bi-Annual Ultrasonic Inspection",
+    "content": "Tracks with utilization above 80% of design capacity accumulate metal fatigue at twice the standard rate. Annual ultrasonic inspection intervals miss developing cracks. Bi-annual inspection (every 6 months) on high-utilization tracks has improved crack detection lead time from 2 months to over 6 months.",
+    "assetType": "TRACK",
+    "incidentId": "inc031",
+    "tags": ["track", "ultrasonic", "inspection", "fatigue", "utilization"]
+  },
+  {
+    "id": "lesson013",
+    "title": "Relay Replacement History Must Be Documented in SCADA Metadata",
+    "content": "When relays are replaced, the replacement date, component specification, and reason must be recorded in SCADA metadata for the signal. Without this history, future technicians cannot distinguish first-failure from recurring failure, leading to suboptimal remediation choices.",
+    "assetType": "SIGNAL",
+    "tags": ["documentation", "SCADA", "metadata", "relay", "history"]
+  },
+  {
+    "id": "lesson014",
+    "title": "Signal Health Score Below 40 Requires Immediate Supervisory Review",
+    "content": "Experience shows that assets with health score below 40 will fail within 14 days without intervention in 87% of cases. A health score threshold alert at 40% should trigger mandatory supervisory review and maintenance scheduling within 72 hours.",
+    "assetType": "SIGNAL",
+    "tags": ["health-score", "threshold", "supervisory", "intervention", "failure-prediction"]
+  },
+  {
+    "id": "lesson015",
+    "title": "Emergency Manual Operation Protocols Must Be Reviewed Annually",
+    "content": "During the INC-057 failure, manual operation invocation took 12 minutes due to unfamiliarity with procedures. All signal operators must demonstrate competency in emergency manual operation annually. Laminated quick-reference cards at each signal location have reduced response time to under 3 minutes.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc057",
+    "tags": ["emergency", "manual-operation", "training", "competency", "protocols"]
+  },
+  {
+    "id": "lesson016",
+    "title": "Ballast Tamping Required Within 48 Hours of Heavy Rainfall on Main Lines",
+    "content": "Ballast settlement begins immediately after heavy rainfall on high-utilization tracks. If tamping is delayed beyond 48 hours, settlement progresses to the point requiring complete resurfacing rather than targeted tamping — 4x the cost and 3x the track possession time.",
+    "assetType": "TRACK",
+    "incidentId": "inc005",
+    "tags": ["ballast", "rainfall", "tamping", "settlement", "maintenance"]
+  },
+  {
+    "id": "lesson017",
+    "title": "Point Motor Thermal Protection Is Essential on High-Use Switches",
+    "content": "Switches with more than 40 operations per hour are susceptible to point motor thermal overload during peak periods. Thermal protection circuits with auto-rest cycles prevent motor burnout and eliminate 90% of thermal overload failures.",
+    "assetType": "SWITCH",
+    "incidentId": "inc023",
+    "tags": ["switch", "thermal", "motor", "protection", "overload"]
+  },
+  {
+    "id": "lesson018",
+    "title": "Firmware Updates on Active Signals Must Be Tested in Staging Environment First",
+    "content": "Automated firmware updates applied directly to production signals have caused unexpected mode-lock failures. All firmware updates must be validated in a staging signal environment before network-wide deployment. Rollback procedures must be tested and documented before any production update.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc017",
+    "tags": ["firmware", "update", "staging", "rollback", "testing"]
+  },
+  {
+    "id": "lesson019",
+    "title": "Multiple Relay Failures on Same Asset Indicates Systemic Environmental Issue",
+    "content": "When an asset experiences three or more relay failures within 18 months, this is a strong indicator of an underlying environmental issue rather than component quality. Root cause investigation must go beyond the immediate relay to examine housing integrity, drainage, humidity management, and specification alignment.",
+    "assetType": "SIGNAL",
+    "tags": ["repeat-failure", "root-cause", "environment", "investigation", "systemic"]
+  },
+  {
+    "id": "lesson020",
+    "title": "Backup Power Supply Testing Must Be Independent of Main Supply",
+    "content": "Testing backup power supplies while connected to main supply masks degraded battery condition. UPS and backup PSU testing must be conducted on isolated circuits with main supply disconnected. Include test under full load for minimum 30 minutes.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc001",
+    "tags": ["backup-power", "UPS", "testing", "isolation", "battery"]
+  },
+  {
+    "id": "lesson021",
+    "title": "Galvanic Corrosion Occurs When Dissimilar Metals Contact in Wet Environments",
+    "content": "Galvanic corrosion accelerates when copper, aluminium, and steel components are in contact with each other in the presence of moisture. All signal cable terminations should use compatible metals or dielectric separators. Dissimilar metal contacts should be documented and inspected at 6-month intervals in humid environments.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc081",
+    "tags": ["galvanic", "corrosion", "dissimilar-metals", "moisture", "termination"]
+  },
+  {
+    "id": "lesson022",
+    "title": "Drainage Assessment Must Accompany Any Signal Installation in Low-Lying Areas",
+    "content": "Signal installations in low-lying or flood-prone areas must include a drainage impact assessment before installation. Retrospective drainage improvements are significantly more expensive than design-stage considerations. Minimum ground clearance of 300mm for signal base is required in flood-prone zones.",
+    "assetType": "SIGNAL",
+    "tags": ["drainage", "installation", "flood", "design", "clearance"]
+  },
+  {
+    "id": "lesson023",
+    "title": "SCADA Communication Loss Does Not Always Indicate Signal Failure",
+    "content": "Engineers sometimes assume signal failure when SCADA communication is lost. INC-081 showed that communication connector failure can cause SCADA loss while the signal itself remains functional. Diagnostic procedures must distinguish between communication path failure and signal logic failure before imposing restrictions.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc081",
+    "tags": ["SCADA", "communication", "diagnostic", "false-alarm", "procedure"]
+  },
+  {
+    "id": "lesson024",
+    "title": "Track Inspection Frequency Must Increase During and After Extreme Weather Events",
+    "content": "Track geometry and integrity can change rapidly during extreme weather events. Ballast movement, rail creep, and joint loosening all accelerate under flood conditions. Track inspection frequency must double during any weather event classified as extreme, and inspection must occur before normal operations resume.",
+    "assetType": "TRACK",
+    "tags": ["track", "inspection", "weather", "extreme", "frequency"]
+  },
+  {
+    "id": "lesson025",
+    "title": "Risk Assessment Must Consider Zone-Wide Factors, Not Just Individual Asset",
+    "content": "Asset-level risk assessment misses zone-wide environmental risks. When multiple assets in the same zone show deteriorating health scores simultaneously, a zone-level risk assessment should be triggered. The cumulative risk of a zone is greater than the sum of individual asset risks.",
+    "tags": ["risk-assessment", "zone", "cumulative", "environment", "systemic"]
+  },
+  {
+    "id": "lesson026",
+    "title": "Maintenance Deferred Beyond 30 Days of Due Date Doubles Risk Score",
+    "content": "Statistical analysis of 8 years of maintenance data shows that any maintenance deferred beyond 30 days of its due date has double the probability of being associated with a subsequent unplanned failure. Maintenance scheduling systems should flag 30-day deferrals for mandatory management escalation.",
+    "tags": ["maintenance", "deferred", "risk", "escalation", "scheduling"]
+  },
+  {
+    "id": "lesson027",
+    "title": "New Engineers Should Study Signal Failure History Before Independent Operation",
+    "content": "Engineers new to a zone should review the last 3 years of signal failure history for their area before being cleared for independent operation. Pattern recognition developed through historical study significantly improves fault diagnosis speed. Structured incident review should be part of zone familiarization.",
+    "tags": ["training", "onboarding", "history", "fault-diagnosis", "new-engineer"]
+  },
+  {
+    "id": "lesson028",
+    "title": "Relay Corrosion Pattern Recognition: 3 Visual Indicators",
+    "content": "Field experience identifies three reliable visual indicators of relay corrosion before electrical failure: (1) Blue-green discoloration on copper contacts, (2) White powder deposits on connection points, (3) Darkening of relay housing interior. Any one indicator should trigger immediate relay replacement rather than wait for next scheduled maintenance.",
+    "tags": ["relay", "corrosion", "visual", "inspection", "field-diagnosis"]
+  },
+  {
+    "id": "lesson029",
+    "title": "Weather Events Must Be Logged Against All Concurrent Incidents",
+    "content": "Weather data must be automatically logged against all incidents occurring during adverse weather. This correlation data is essential for identifying weather-sensitive assets and developing proactive maintenance schedules. Weather correlation analysis has identified 23% of signal vulnerability patterns in Zone RG.",
+    "tags": ["weather", "logging", "correlation", "data", "preventive"]
+  },
+  {
+    "id": "lesson030",
+    "title": "When Signal S11 Pattern Repeats, Check All Rivergate Zone Assets",
+    "content": "The failure pattern observed in INC-044, INC-057, and INC-081 is specific to the Rivergate environmental conditions: high humidity, flood risk, and salt-laden air. Whenever a new S11-type incident occurs, a zone-wide inspection of all Rivergate assets should be scheduled within 7 days. This pattern will likely repeat unless zone-wide environmental mitigation is implemented.",
+    "assetType": "SIGNAL",
+    "incidentId": "inc090",
+    "tags": ["rivergate", "S11", "zone", "pattern", "inspection", "prevention"]
+  }
+]

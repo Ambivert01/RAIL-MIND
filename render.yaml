@@ -1,0 +1,135 @@
+## RailMind — Render Blueprint
+## ─────────────────────────────────────────────────────────────────────────────
+## One-click deploy: https://render.com/deploy
+##
+## EXTERNAL SERVICES (provision these first, then fill in sync: false vars):
+##   1. Neo4j AuraDB Free  → https://console.neo4j.io
+##      Set: NEO4J_URI, NEO4J_PASSWORD
+##   2. Qdrant Cloud Free  → https://cloud.qdrant.io
+##      Set: QDRANT_URL, QDRANT_API_KEY
+##   3. (Optional) OpenAI  → https://platform.openai.com/api-keys
+##      Set: OPENAI_API_KEY
+## ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  # ─── Backend API (NestJS) ────────────────────────────────────────────────────
+  - type: web
+    name: railmind-api
+    runtime: node
+    plan: starter
+    region: oregon
+    rootDir: .
+    buildCommand: >-
+      npm install -g pnpm@8.15.9 &&
+      pnpm install --frozen-lockfile &&
+      pnpm --filter @railmind/shared-types build &&
+      cd services/api &&
+      npx prisma generate &&
+      npx nest build
+    startCommand: cd services/api && node dist/main
+    healthCheckPath: /api/v1/health
+    buildFilter:
+      paths:
+        - services/api/**
+        - packages/shared-types/**
+        - pnpm-lock.yaml
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+      # PostgreSQL — auto-linked from Render managed database below
+      - key: DATABASE_URL
+        fromDatabase:
+          name: railmind-postgres
+          property: connectionString
+      # Redis — auto-linked from Render Key-Value below
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: railmind-redis
+          property: connectionString
+      # Neo4j AuraDB — fill in after provisioning at console.neo4j.io
+      - key: NEO4J_URI
+        sync: false
+      - key: NEO4J_USER
+        value: neo4j
+      - key: NEO4J_PASSWORD
+        sync: false
+      # Qdrant Cloud — fill in after provisioning at cloud.qdrant.io
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      # Auth
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRY
+        value: 7d
+      - key: REFRESH_TOKEN_EXPIRY
+        value: 30d
+      # AI providers (optional — mock mode works without these)
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      # Frontend URL — update after railmind-web is deployed
+      - key: FRONTEND_URL
+        sync: false
+      # MinIO / S3 storage (optional — set if using external S3/MinIO)
+      - key: MINIO_ENDPOINT
+        sync: false
+      - key: MINIO_PORT
+        value: "9000"
+      - key: MINIO_ACCESS_KEY
+        sync: false
+      - key: MINIO_SECRET_KEY
+        sync: false
+      - key: MINIO_BUCKET
+        value: railmind-docs
+
+  # ─── Frontend (Next.js) ──────────────────────────────────────────────────────
+  - type: web
+    name: railmind-web
+    runtime: node
+    plan: starter
+    region: oregon
+    rootDir: .
+    buildCommand: >-
+      npm install -g pnpm@8.15.9 &&
+      pnpm install --frozen-lockfile &&
+      pnpm --filter @railmind/shared-types build &&
+      pnpm --filter web build
+    startCommand: cd apps/web && npx next start -p ${PORT:-3000}
+    buildFilter:
+      paths:
+        - apps/web/**
+        - packages/shared-types/**
+        - pnpm-lock.yaml
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Set these to your deployed API URL after railmind-api is live
+      # e.g. https://railmind-api.onrender.com
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+      - key: NEXT_PUBLIC_WS_URL
+        sync: false
+      # Optional Mapbox token for interactive map
+      - key: NEXT_PUBLIC_MAPBOX_TOKEN
+        sync: false
+
+  # ─── Redis Key-Value ──────────────────────────────────────────────────────────
+  - type: redis
+    name: railmind-redis
+    plan: free
+    region: oregon
+    ipAllowList: []
+
+databases:
+  # ─── PostgreSQL ───────────────────────────────────────────────────────────────
+  - name: railmind-postgres
+    plan: starter
+    region: oregon
+    databaseName: railmind
+    user: railmind
