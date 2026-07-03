@@ -7,7 +7,9 @@
 ##      Set: NEO4J_URI, NEO4J_PASSWORD
 ##   2. Qdrant Cloud Free  → https://cloud.qdrant.io
 ##      Set: QDRANT_URL, QDRANT_API_KEY
-##   3. (Optional) OpenAI  → https://platform.openai.com/api-keys
+##   3. Upstash Redis Free → https://upstash.com
+##      Set: REDIS_URL (use rediss:// TLS URL)
+##   4. (Optional) OpenAI  → https://platform.openai.com/api-keys
 ##      Set: OPENAI_API_KEY
 ## ─────────────────────────────────────────────────────────────────────────────
 
@@ -16,16 +18,16 @@ services:
   - type: web
     name: railmind-api
     runtime: node
-    plan: starter
+    plan: free
     region: oregon
     rootDir: .
     buildCommand: >-
       npm install -g pnpm@8.15.9 &&
-      pnpm install --frozen-lockfile &&
+      pnpm install --frozen-lockfile --ignore-scripts &&
       pnpm --filter @railmind/shared-types build &&
       cd services/api &&
-      npx prisma generate &&
-      npx nest build
+      node_modules/.bin/prisma generate &&
+      node_modules/.bin/nest build
     startCommand: cd services/api && node dist/main
     healthCheckPath: /api/v1/health
     buildFilter:
@@ -38,17 +40,12 @@ services:
         value: production
       - key: PORT
         value: "3001"
-      # PostgreSQL — auto-linked from Render managed database below
+      # PostgreSQL — copy Internal Database URL from Render PostgreSQL dashboard
       - key: DATABASE_URL
-        fromDatabase:
-          name: railmind-postgres
-          property: connectionString
-      # Redis — auto-linked from Render Key-Value below
+        sync: false
+      # Redis — Upstash rediss:// TLS URL (https://upstash.com)
       - key: REDIS_URL
-        fromService:
-          type: redis
-          name: railmind-redis
-          property: connectionString
+        sync: false
       # Neo4j AuraDB — fill in after provisioning at console.neo4j.io
       - key: NEO4J_URI
         sync: false
@@ -76,23 +73,12 @@ services:
       # Frontend URL — update after railmind-web is deployed
       - key: FRONTEND_URL
         sync: false
-      # MinIO / S3 storage (optional — set if using external S3/MinIO)
-      - key: MINIO_ENDPOINT
-        sync: false
-      - key: MINIO_PORT
-        value: "9000"
-      - key: MINIO_ACCESS_KEY
-        sync: false
-      - key: MINIO_SECRET_KEY
-        sync: false
-      - key: MINIO_BUCKET
-        value: railmind-docs
 
   # ─── Frontend (Next.js) ──────────────────────────────────────────────────────
   - type: web
     name: railmind-web
     runtime: node
-    plan: starter
+    plan: free
     region: oregon
     rootDir: .
     buildCommand: >-
@@ -100,7 +86,7 @@ services:
       pnpm install --frozen-lockfile &&
       pnpm --filter @railmind/shared-types build &&
       pnpm --filter web build
-    startCommand: cd apps/web && npx next start -p ${PORT:-3000}
+    startCommand: cd apps/web && node_modules/.bin/next start -p $PORT
     buildFilter:
       paths:
         - apps/web/**
@@ -109,27 +95,17 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      # Set these to your deployed API URL after railmind-api is live
-      # e.g. https://railmind-api.onrender.com
       - key: NEXT_PUBLIC_API_URL
         sync: false
       - key: NEXT_PUBLIC_WS_URL
         sync: false
-      # Optional Mapbox token for interactive map
       - key: NEXT_PUBLIC_MAPBOX_TOKEN
         sync: false
-
-  # ─── Redis Key-Value ──────────────────────────────────────────────────────────
-  - type: redis
-    name: railmind-redis
-    plan: free
-    region: oregon
-    ipAllowList: []
 
 databases:
   # ─── PostgreSQL ───────────────────────────────────────────────────────────────
   - name: railmind-postgres
-    plan: starter
+    plan: free
     region: oregon
     databaseName: railmind
     user: railmind
