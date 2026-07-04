@@ -23,7 +23,7 @@ services:
     rootDir: .
     buildCommand: >-
       npm install -g pnpm@8.15.9 &&
-      pnpm install --frozen-lockfile --ignore-scripts &&
+      pnpm install --frozen-lockfile &&
       pnpm --filter @railmind/shared-types build &&
       cd services/api &&
       node_modules/.bin/prisma generate &&

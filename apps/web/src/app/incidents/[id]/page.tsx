@@ -52,6 +52,17 @@ export default function IncidentDetailPage() {
     }).catch(() => setLoading(false));
   }, [id]);
 
+  const handleClose = async () => {
+    try {
+      await incidentsApi.close(id, { resolution: "Closed via dashboard" });
+      toast.success("Incident closed successfully");
+      const updated = await incidentsApi.getOne(id);
+      setData(updated.data);
+    } catch {
+      toast.error("Failed to close incident");
+    }
+  };
+
   const handleInvestigate = async () => {
     if (!data) return;
     setInvestigating(true);
