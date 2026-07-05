@@ -128,7 +128,7 @@ importers:
         version: 5.9.3
 
   packages/shared-types:
-    devDependencies:
+    dependencies:
       typescript:
         specifier: 5.4.5
         version: 5.4.5
@@ -206,7 +206,7 @@ importers:
         version: 5.22.0(prisma@5.22.0)
       '@qdrant/js-client-rest':
         specifier: ^1.9.0
-        version: 1.18.0(typescript@5.9.3)
+        version: 1.18.0(typescript@5.4.5)
       '@railmind/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
@@ -287,10 +287,10 @@ importers:
         version: 4.8.3
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@20.19.43)(typescript@5.9.3)
+        version: 10.9.2(@types/node@20.19.43)(typescript@5.4.5)
       typescript:
-        specifier: ^5.4.5
-        version: 5.9.3
+        specifier: 5.4.5
+        version: 5.4.5
       uuid:
         specifier: ^10.0.0
         version: 10.0.0
@@ -1711,7 +1711,7 @@ packages:
       '@langchain/core': 0.2.36(openai@4.104.0)
       '@langchain/langgraph': 0.2.74(@langchain/core@0.2.36)
       '@langchain/openai': 0.2.11
-      '@qdrant/js-client-rest': 1.18.0(typescript@5.9.3)
+      '@qdrant/js-client-rest': 1.18.0(typescript@5.4.5)
       binary-extensions: 2.3.0
       expr-eval: 2.0.2
       flat: 5.0.2
@@ -2333,14 +2333,14 @@ packages:
       '@prisma/debug': 5.22.0
     dev: false
 
-  /@qdrant/js-client-rest@1.18.0(typescript@5.9.3):
+  /@qdrant/js-client-rest@1.18.0(typescript@5.4.5):
     resolution: {integrity: sha512-/0dqX5uV9chC1DnYSnU4gNMrDqse/pt6hHg3Rqqpl5isH7xl1xSNvffjzBoxycDD79luWn7Ho6Rh/61sOs5DNw==}
     engines: {node: '>=18.17.0', pnpm: '>=8'}
     peerDependencies:
       typescript: '>=4.7'
     dependencies:
       '@qdrant/openapi-typescript-fetch': 1.2.6
-      typescript: 5.9.3
+      typescript: 5.4.5
       undici: 6.27.0
     dev: false
 
@@ -6154,7 +6154,7 @@ packages:
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.2(@types/node@20.19.43)(typescript@5.9.3)
+      ts-node: 10.9.2(@types/node@20.19.43)(typescript@5.4.5)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -8873,7 +8873,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3):
+  /ts-node@10.9.2(@types/node@20.19.43)(typescript@5.4.5):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -8899,7 +8899,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.4
       make-error: 1.3.6
-      typescript: 5.9.3
+      typescript: 5.4.5
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
@@ -8972,7 +8972,6 @@ packages:
     resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /typescript@5.7.2:
     resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
@@ -8984,6 +8983,7 @@ packages:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /typewise-core@1.2.0:
     resolution: {integrity: sha512-2SCC/WLzj2SbUwzFOzqMCkz5amXLlxtJqDKTICqg30x+2DZxcfZN2MvQZmGfXWKNWaKK9pBPsvkcwv8bF/gxKg==}
