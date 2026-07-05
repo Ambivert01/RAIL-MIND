@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import { maintenanceApi, assetsApi } from "@/lib/api-client";
@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 const MAINTENANCE_TYPES = ["INSPECTION", "REPAIR", "REPLACEMENT", "CALIBRATION", "UPGRADE", "EMERGENCY_REPAIR", "SCHEDULED_MAINTENANCE"];
 const OUTCOMES = ["SUCCESSFUL", "PARTIAL", "FAILED", "DEFERRED"];
 
-export default function NewWorkOrderPage() {
+function NewWorkOrderForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [assets, setAssets] = useState<any[]>([]);
@@ -208,5 +208,13 @@ export default function NewWorkOrderPage() {
         </form>
       </div>
     </AppLayout>
+  );
+}
+
+export default function NewWorkOrderPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen"><Loader2 className="w-6 h-6 animate-spin" /></div>}>
+      <NewWorkOrderForm />
+    </Suspense>
   );
 }
