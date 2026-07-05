@@ -23,7 +23,7 @@ services:
     rootDir: .
     buildCommand: >-
       npm install -g pnpm@8.15.9 &&
-      pnpm install --frozen-lockfile &&
+      NODE_ENV=development pnpm install --frozen-lockfile &&
       pnpm --filter @railmind/shared-types build &&
       cd services/api &&
       node_modules/.bin/prisma generate &&
@@ -40,37 +40,30 @@ services:
         value: production
       - key: PORT
         value: "3001"
-      # PostgreSQL — copy Internal Database URL from Render PostgreSQL dashboard
       - key: DATABASE_URL
         sync: false
-      # Redis — Upstash rediss:// TLS URL (https://upstash.com)
       - key: REDIS_URL
         sync: false
-      # Neo4j AuraDB — fill in after provisioning at console.neo4j.io
       - key: NEO4J_URI
         sync: false
       - key: NEO4J_USER
         value: neo4j
       - key: NEO4J_PASSWORD
         sync: false
-      # Qdrant Cloud — fill in after provisioning at cloud.qdrant.io
       - key: QDRANT_URL
         sync: false
       - key: QDRANT_API_KEY
         sync: false
-      # Auth
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRY
         value: 7d
       - key: REFRESH_TOKEN_EXPIRY
         value: 30d
-      # AI providers (optional — mock mode works without these)
       - key: OPENAI_API_KEY
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
-      # Frontend URL — update after railmind-web is deployed
       - key: FRONTEND_URL
         sync: false
 
@@ -83,7 +76,7 @@ services:
     rootDir: .
     buildCommand: >-
       npm install -g pnpm@8.15.9 &&
-      pnpm install --frozen-lockfile &&
+      NODE_ENV=development pnpm install --frozen-lockfile &&
       pnpm --filter @railmind/shared-types build &&
       pnpm --filter web build
     startCommand: cd apps/web && node_modules/.bin/next start -p $PORT
@@ -103,7 +96,6 @@ services:
         sync: false
 
 databases:
-  # ─── PostgreSQL ───────────────────────────────────────────────────────────────
   - name: railmind-postgres
     plan: free
     region: oregon

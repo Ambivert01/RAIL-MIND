@@ -27,7 +27,7 @@ function RiskBadge({ severity }: { severity: string }) {
 
 export default function RiskPage() {
   const router = useRouter();
-  const [dashboard, setDashboard] = useState<{ criticalAssets: any[]; highRiskAssets: any[]; topRisks: any[]; stats: any; networkTrend: any } | null>(null);
+  const [dashboard, setDashboard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [recalculating, setRecalculating] = useState(false);
   const [heatmap, setHeatmap] = useState<Array<{ assetId: string; assetCode: string; riskScore: number; severity: string }>>([]);

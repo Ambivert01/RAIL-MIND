@@ -4,187 +4,334 @@
 >
 > ← [Back to README](../README.md)
 
-> Deploy the full stack (Next.js frontend + NestJS backend + PostgreSQL + Redis) to Render.
+Deploy the full RailMind stack (Next.js frontend + NestJS backend + PostgreSQL + Redis) to Render — completely free.
 
 ---
 
 ## What Gets Deployed
 
-| Service | Render Type | Plan |
+| Service | Where | Plan |
 |---|---|---|
-| NestJS API (`services/api`) | Web Service (Node) | Starter ($7/mo) |
-| Next.js Frontend (`apps/web`) | Web Service (Node) | Starter ($7/mo) |
-| PostgreSQL | Managed Database | Starter ($7/mo) |
-| Redis | Key-Value (Redis-compatible) | Free |
-| Neo4j | **External** — Neo4j AuraDB Free | Free |
-| Qdrant | **External** — Qdrant Cloud Free | Free |
+| NestJS API (`services/api`) | Render Web Service | Free |
+| Next.js Frontend (`apps/web`) | Render Web Service | Free |
+| PostgreSQL | Render Managed Database | Free |
+| Redis | **External** — Upstash | Free |
+| Neo4j | **External** — Neo4j AuraDB | Free |
+| Qdrant | **External** — Qdrant Cloud | Free |
 
-> **Why external Neo4j and Qdrant?** Render doesn't offer these databases natively. Both have generous free tiers and work perfectly over the internet.
-
----
-
-## Step 1 — Provision External Services
-
-### 1a. Neo4j AuraDB Free
-
-1. Go to [console.neo4j.io](https://console.neo4j.io)
-2. Create a free account → **New Instance** → **AuraDB Free**
-3. Save the generated password somewhere safe (shown once)
-4. Note your connection URI: `neo4j+s://xxxxxxxx.databases.neo4j.io`
-
-You'll need:
-- `NEO4J_URI` = the `neo4j+s://...` URI
-- `NEO4J_PASSWORD` = the password you saved
-- `NEO4J_USER` = `neo4j` (default)
-
-### 1b. Qdrant Cloud Free
-
-1. Go to [cloud.qdrant.io](https://cloud.qdrant.io)
-2. Create account → **New Cluster** → Free tier
-3. Create an API key under **API Keys**
-4. Note your cluster URL: `https://xxxxxxxx.us-east4-0.gcp.cloud.qdrant.io`
-
-You'll need:
-- `QDRANT_URL` = the cluster URL
-- `QDRANT_API_KEY` = the key you created
+> Render removed their free Redis tier. We use Upstash instead — it's free, serverless, and works perfectly with the existing code.
 
 ---
 
-## Step 2 — Push Code to GitHub
+## Phase 1 — Provision All External Services First
 
-Render deploys from Git. If not already on GitHub:
+Do all of this before touching Render. You need 3 accounts.
+
+---
+
+### 1a. Neo4j AuraDB (Graph Database)
+
+**What it's for:** Knowledge graph — stores relationships between assets, incidents, failure patterns.
+
+1. Go to [console.neo4j.io](https://console.neo4j.io) → Sign up for free
+2. Click **New Instance** → select **AuraDB Free**
+3. After creation, a password is shown **once** — copy and save it immediately
+4. Your instance dashboard shows the connection URI: `neo4j+s://xxxxxxxx.databases.neo4j.io`
+
+**You'll need these 3 values:**
+
+| Variable | Where to find it | Example |
+|---|---|---|
+| `NEO4J_URI` | Instance dashboard → Connection URI | `neo4j+s://34266ce9.databases.neo4j.io` |
+| `NEO4J_USER` | Always `neo4j` (default) | `neo4j` |
+| `NEO4J_PASSWORD` | Shown once at instance creation | `lwzlbHRmyjT1tjkw...` |
+
+> ⚠️ **Important:** Use `neo4j+s://` (TLS) — not `bolt://`. AuraDB only accepts TLS connections.
+
+---
+
+### 1b. Qdrant Cloud (Vector Database)
+
+**What it's for:** Semantic memory — stores vector embeddings of incidents, lessons, and procedures for AI search.
+
+1. Go to [cloud.qdrant.io](https://cloud.qdrant.io) → Sign up for free
+2. Click **New Cluster** → select the **Free** tier → choose any region
+3. Once cluster is created, go to **API Keys** → click **Create API Key**
+4. Copy the API key (shown once) and the cluster URL from the dashboard
+
+**You'll need these 2 values:**
+
+| Variable | Where to find it | Example |
+|---|---|---|
+| `QDRANT_URL` | Cluster dashboard → Cluster URL | `https://9ace80a4-0c8a-4587-824b-8d89a488a332.eu-central-1-0.aws.cloud.qdrant.io` |
+| `QDRANT_API_KEY` | API Keys section → your created key | `eyJhbGciOiJIUzI1NiIsInR5cCI6...` |
+
+---
+
+### 1c. Upstash Redis (Cache + WebSocket Pub/Sub)
+
+**What it's for:** Caching agent responses and real-time WebSocket event bus.
+
+> Render removed free Redis. Upstash is the free alternative — works with the same `ioredis` code, no changes needed.
+
+1. Go to [upstash.com](https://upstash.com) → Sign up for free
+2. Click **Create Database** → select **Redis**
+3. Choose any region → **Free** tier → Create
+4. On the database dashboard, find **REST URL** section → copy the **`rediss://`** connection string (TLS version)
+
+**You'll need this 1 value:**
+
+| Variable | Where to find it | Example |
+|---|---|---|
+| `REDIS_URL` | Database dashboard → Redis connection string (TLS) | `rediss://default:PASSWORD@concrete-tetra-105681.upstash.io:6379` |
+
+> ⚠️ Use the `rediss://` URL (with double `s`) — not `redis://`. The `s` means TLS/SSL which Upstash requires.
+
+---
+
+### 1d. OpenAI API Key (Optional but Recommended)
+
+**What it's for:** Powers the 7-agent AI investigation pipeline and semantic embeddings.
+
+> Without this key, the system still works — agents use template responses and embeddings use hash-based fallback.
+
+1. Go to [platform.openai.com/api-keys](https://platform.openai.com/api-keys) → Sign in
+2. Click **Create new secret key** → copy it immediately (shown once)
+
+| Variable | Where to find it |
+|---|---|
+| `OPENAI_API_KEY` | OpenAI dashboard → API Keys section |
+
+---
+
+## Phase 2 — Push Code to GitHub
+
+Render deploys from Git. Push your code to GitHub if not already done:
 
 ```bash
 git add .
-git commit -m "chore: add Render deployment config"
+git commit -m "chore: ready for Render deployment"
 git remote add origin https://github.com/YOUR_USERNAME/railmind.git
 git push -u origin main
 ```
 
 ---
 
-## Step 3 — Deploy on Render
+## Phase 3 — Deploy on Render (Manual — Free)
 
-### Option A: Blueprint Deploy (Recommended — one click)
-
-1. Go to [render.com](https://render.com) → **New** → **Blueprint**
-2. Connect your GitHub repo
-3. Render detects `render.yaml` and creates all services at once
-4. Click **Apply** — Render provisions PostgreSQL, Redis, and both web services
-
-### Option B: Manual (if Blueprint fails)
-
-Deploy services in this order:
-1. **Database** — New → PostgreSQL → name: `railmind-postgres`
-2. **Redis** — New → Redis → name: `railmind-redis`
-3. **API** — New → Web Service → connect repo, set root dir to `.`
-4. **Web** — New → Web Service → connect repo, set root dir to `.`
-
-Use the build/start commands from `render.yaml` for each.
+Deploy in this exact order. Each service depends on the previous one.
 
 ---
 
-## Step 4 — Set Environment Variables
+### Step 1 — Create PostgreSQL Database
 
-After Render creates the services, fill in the `sync: false` variables:
+1. Go to [render.com](https://render.com) → **New** → **PostgreSQL**
+2. Fill in:
+   - Name: `railmind-postgres`
+   - Database: `railmind`
+   - User: `railmind`
+   - Plan: **Free**
+   - Region: Oregon (or closest to you)
+3. Click **Create Database**
+4. Wait for it to become available (~1 min)
+5. On the database dashboard, copy the **Internal Database URL** — looks like:
+   ```
+   postgresql://railmind_user:PASSWORD@dpg-xxxxx-a/railmind_postgres
+   ```
 
-### railmind-api (Dashboard → Environment)
+---
 
-| Variable | Value |
+### Step 2 — Create API Service
+
+1. Render → **New** → **Web Service**
+2. Connect your GitHub repo
+3. Fill in:
+   - Name: `railmind-api`
+   - Root Directory: *(leave blank)*
+   - Runtime: **Node**
+   - Build Command:
+     ```
+     npm install -g pnpm@8.15.9 && NODE_ENV=development pnpm install --frozen-lockfile && pnpm --filter @railmind/shared-types build && cd services/api && node_modules/.bin/prisma generate && node_modules/.bin/nest build
+     ```
+   - Start Command:
+     ```
+     cd services/api && node dist/main
+     ```
+   - Plan: **Free**
+
+4. Under **Environment Variables**, add each one individually (no quotes, just the value):
+
+| Key | Value |
 |---|---|
+| `NODE_ENV` | `production` |
+| `PORT` | `3001` |
+| `DATABASE_URL` | Internal URL from Step 1 |
+| `REDIS_URL` | Upstash `rediss://...` URL |
 | `NEO4J_URI` | `neo4j+s://xxxxxxxx.databases.neo4j.io` |
-| `NEO4J_PASSWORD` | your AuraDB password |
-| `QDRANT_URL` | `https://xxxxxxxx.cloud.qdrant.io` |
-| `QDRANT_API_KEY` | your Qdrant API key |
-| `OPENAI_API_KEY` | (optional) your OpenAI key |
-| `FRONTEND_URL` | `https://railmind-web.onrender.com` (your web URL) |
+| `NEO4J_USER` | `neo4j` |
+| `NEO4J_PASSWORD` | Your AuraDB password |
+| `QDRANT_URL` | Your Qdrant cluster URL |
+| `QDRANT_API_KEY` | Your Qdrant API key |
+| `JWT_SECRET` | Any long random string (e.g. `railmind_super_secret_jwt_2024_xyz`) |
+| `JWT_EXPIRY` | `7d` |
+| `REFRESH_TOKEN_EXPIRY` | `30d` |
+| `OPENAI_API_KEY` | Your OpenAI key (optional) |
+| `FRONTEND_URL` | `https://railmind-web.onrender.com` |
 
-> `DATABASE_URL`, `REDIS_URL`, and `JWT_SECRET` are auto-set by the Blueprint.
+5. Click **Create Web Service** — wait for build to complete (~5 min)
 
-### railmind-web (Dashboard → Environment)
+---
 
-| Variable | Value |
+### Step 3 — Run Database Migration
+
+Once the API is deployed and running, go to its **Shell** tab on Render:
+
+```bash
+cd services/api && npx prisma db push
+```
+
+This creates all PostgreSQL tables. Takes ~30 seconds.
+
+---
+
+### Step 4 — Seed Demo Data
+
+In the same API Shell tab, run:
+
+```bash
+cd services/api && npx ts-node --transpile-only --compiler-options '{"module":"commonjs","target":"ES2020","esModuleInterop":true,"allowSyntheticDefaultImports":true,"resolveJsonModule":true}' ../../scripts/seed/index.ts
+```
+
+Expected output:
+```
+🚂 RailMind Demo World Seed Starting...
+✅ PostgreSQL seeding complete
+✅ Neo4j: 424 nodes, 423 relationships
+✅ Qdrant: 100 incidents, 30 lessons, 10 procedures vectorized
+🎉 Demo world seeded successfully!
+```
+
+---
+
+### Step 5 — Create Frontend Service
+
+1. Render → **New** → **Web Service**
+2. Connect same GitHub repo
+3. Fill in:
+   - Name: `railmind-web`
+   - Root Directory: *(leave blank)*
+   - Runtime: **Node**
+   - Build Command:
+     ```
+     npm install -g pnpm@8.15.9 && NODE_ENV=development pnpm install --frozen-lockfile && pnpm --filter @railmind/shared-types build && pnpm --filter web build
+     ```
+   - Start Command:
+     ```
+     cd apps/web && node_modules/.bin/next start -p $PORT
+     ```
+   - Plan: **Free**
+
+4. Environment Variables:
+
+| Key | Value |
 |---|---|
 | `NEXT_PUBLIC_API_URL` | `https://railmind-api.onrender.com` |
 | `NEXT_PUBLIC_WS_URL` | `https://railmind-api.onrender.com` |
-| `NEXT_PUBLIC_MAPBOX_TOKEN` | (optional) your Mapbox token |
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | Your Mapbox token (optional — fallback map works without it) |
+
+5. Click **Create Web Service**
 
 ---
 
-## Step 5 — Run Database Migrations
-
-After the API service is running, open its **Shell** tab on Render and run:
-
-```bash
-cd services/api
-npx prisma db push
-```
-
-This creates all PostgreSQL tables.
-
----
-
-## Step 6 — Seed Demo Data
-
-In the same API Shell tab:
-
-```bash
-# From the repo root
-node -e "
-const { execSync } = require('child_process');
-execSync('npx ts-node --transpile-only --compiler-options \'{\\"module\\":\\"commonjs\\"}\' scripts/seed/index.ts', { stdio: 'inherit' });
-"
-```
-
-Or use the Render **One-off Job** / **Shell** to run it manually.
-
----
-
-## Step 7 — Verify Deployment
+## Phase 4 — Verify Everything Works
 
 | Check | URL |
 |---|---|
 | API health | `https://railmind-api.onrender.com/api/v1/health` |
-| API docs | `https://railmind-api.onrender.com/api/docs` (dev only) |
 | Frontend | `https://railmind-web.onrender.com` |
+
+Login with: `admin@railmind.com` / `railmind123`
 
 ---
 
-## WebSocket Note
+## All Environment Variables — Complete Reference
 
-Render supports WebSocket connections on all web services. The Socket.IO connection from the frontend uses `NEXT_PUBLIC_WS_URL`. Make sure it points to the API URL without trailing slash.
+### railmind-api
+
+| Variable | Required | Where to Get It |
+|---|---|---|
+| `NODE_ENV` | ✅ | Set to `production` |
+| `PORT` | ✅ | Set to `3001` |
+| `DATABASE_URL` | ✅ | Render PostgreSQL → Internal Database URL |
+| `REDIS_URL` | ✅ | Upstash → Database → Redis connection string (TLS `rediss://`) |
+| `NEO4J_URI` | ✅ | Neo4j AuraDB → console.neo4j.io → Instance URI |
+| `NEO4J_USER` | ✅ | Always `neo4j` |
+| `NEO4J_PASSWORD` | ✅ | Neo4j AuraDB → password shown at instance creation |
+| `QDRANT_URL` | ✅ | Qdrant Cloud → cloud.qdrant.io → Cluster URL |
+| `QDRANT_API_KEY` | ✅ | Qdrant Cloud → API Keys section |
+| `JWT_SECRET` | ✅ | Any random string (keep secret) |
+| `JWT_EXPIRY` | ✅ | `7d` |
+| `REFRESH_TOKEN_EXPIRY` | ✅ | `30d` |
+| `OPENAI_API_KEY` | Optional | platform.openai.com/api-keys |
+| `ANTHROPIC_API_KEY` | Optional | console.anthropic.com |
+| `FRONTEND_URL` | ✅ | `https://railmind-web.onrender.com` |
+
+### railmind-web
+
+| Variable | Required | Where to Get It |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | ✅ | `https://railmind-api.onrender.com` |
+| `NEXT_PUBLIC_WS_URL` | ✅ | `https://railmind-api.onrender.com` |
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | Optional | account.mapbox.com → Tokens |
 
 ---
 
 ## Free Tier Limitations
 
-- **Redis Free** — 25MB storage, no persistence between restarts
-- **PostgreSQL Starter** — 1GB storage, 1 connection limit; consider using `?connection_limit=5&pool_timeout=0` in `DATABASE_URL`
-- **Web Services** — Free plan spins down after 15 min inactivity; Starter plan stays always-on
-- **Neo4j AuraDB Free** — 200K nodes, 400K relationships (more than enough for demo)
-- **Qdrant Cloud Free** — 1GB storage (more than enough for demo vectors)
+| Service | Limit | Impact |
+|---|---|---|
+| Render Free Web Services | Spin down after 15 min inactivity | Cold start ~30-60s on first request |
+| Render Free PostgreSQL | 1GB storage, expires after 90 days | Fine for demo |
+| Upstash Redis Free | 10,000 commands/day, 256MB | Fine for demo |
+| Neo4j AuraDB Free | 200K nodes, 400K relationships | More than enough |
+| Qdrant Cloud Free | 1GB storage | More than enough |
 
 ---
 
 ## Troubleshooting
 
-### Build fails: `Cannot find module '@railmind/shared-types'`
-The build command must run `pnpm --filter @railmind/shared-types build` before building the API or web. This is already in `render.yaml`. If it fails, check that `packages/shared-types/src/index.ts` compiles without errors.
+### Build fails: `moduleResolution=node10 is deprecated`
+Already fixed in the repo. Make sure you have the latest code pushed (`packages/shared-types/tsconfig.json` has `"ignoreDeprecations": "6.0"`).
 
-### Neo4j connection error on startup
-The API is configured to not throw on Neo4j connection failure — it logs the error and continues. Check your `NEO4J_URI` format: it must be `neo4j+s://` (TLS) not `bolt://` for AuraDB.
+### Neo4j: `authentication failure`
+- Check `NEO4J_URI` starts with `neo4j+s://` not `bolt://`
+- Re-check `NEO4J_PASSWORD` — paste carefully without quotes in Render env vars
 
-### `pnpm: command not found`
-The build command installs pnpm globally with `npm install -g pnpm@8.15.9` before running workspace commands. If Render's node environment doesn't persist globals, add `export PATH="$PATH:$(npm root -g)/.bin"` at the start of the build command.
+### Qdrant: `fetch failed` warnings on startup
+- Verify `QDRANT_URL` is the full HTTPS cluster URL
+- Check `QDRANT_API_KEY` is pasted correctly (it's a long JWT string)
+- These are warnings only — the API still starts successfully
+
+### Redis connection fails
+- Make sure you're using the `rediss://` URL (with double `s`), not `redis://`
+- Copy the TLS connection string from Upstash dashboard
+
+### `devDependencies skipped` during build
+- This is expected when `NODE_ENV=production`
+- The build command uses `npx` to run nest/prisma so devDeps aren't needed
 
 ### CORS errors on frontend
-Set `FRONTEND_URL` in the API service environment to your exact Render web URL (e.g., `https://railmind-web.onrender.com`). The API already allows all `*.onrender.com` origins as a fallback.
+- Set `FRONTEND_URL` in API env vars to your exact Render web URL
+- No trailing slash
 
 ### PostgreSQL: too many connections
-Add connection pooling params to `DATABASE_URL`:
+Add pool params to `DATABASE_URL`:
 ```
-postgresql://railmind:password@host:5432/railmind?connection_limit=5&pool_timeout=0
+postgresql://user:pass@host/db?connection_limit=5&pool_timeout=0
 ```
+
+### Seed fails: `Cannot connect to Neo4j`
+Run seed after both PostgreSQL AND Neo4j are connected. Check API logs for Neo4j connection status before running seed.
 
 ---
 
