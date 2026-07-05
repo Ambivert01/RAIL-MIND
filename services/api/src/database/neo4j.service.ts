@@ -19,6 +19,8 @@ export class Neo4jService implements OnModuleInit, OnModuleDestroy {
     const user = this.configService.get<string>("neo4j.user");
     const password = this.configService.get<string>("neo4j.password");
 
+    this.logger.log(`🔍 Neo4j connecting to: ${uri} as user: ${user} (password length: ${password?.length ?? 0})`);
+
     try {
       this.driver = neo4j.driver(uri, neo4j.auth.basic(user, password), {
         maxConnectionPoolSize: 50,
