@@ -151,7 +151,7 @@ Deploy in this exact order. Each service depends on the previous one.
    - Runtime: **Node**
    - Build Command:
      ```
-     npm install -g pnpm@8.15.9 && NODE_ENV=development pnpm install --frozen-lockfile && pnpm --filter @railmind/shared-types build && cd services/api && node_modules/.bin/prisma generate && node_modules/.bin/nest build
+     npm install -g pnpm@8.15.9 && NODE_ENV=development pnpm install --frozen-lockfile && pnpm --filter @railmind/shared-types build && cd services/api && node_modules/.bin/prisma generate && node_modules/.bin/prisma db push && node_modules/.bin/nest build
      ```
    - Start Command:
      ```
@@ -182,25 +182,26 @@ Deploy in this exact order. Each service depends on the previous one.
 
 ---
 
-### Step 3 — Run Database Migration
+### Step 3 — Seed Demo Data
 
-Once the API is deployed and running, go to its **Shell** tab on Render:
+> ⚠️ **Render Shell requires a paid plan.** Run the seed from your **local machine** instead — it connects to the production database over the internet using the External Database URL.
 
-```bash
-cd services/api && npx prisma db push
+**Get the External Database URL** from Render → `railmind-postgres` → **Info** tab → **External Database URL**. It looks like:
+```
+postgresql://railmind_postgres_user:PASSWORD@dpg-xxxxx-a.oregon-postgres.render.com/railmind_postgres
 ```
 
-This creates all PostgreSQL tables. Takes ~30 seconds.
-
----
-
-### Step 4 — Seed Demo Data
-
-In the same API Shell tab, run:
+Run from your local machine (from the repo root):
 
 ```bash
-cd services/api && npx ts-node --transpile-only --compiler-options '{"module":"commonjs","target":"ES2020","esModuleInterop":true,"allowSyntheticDefaultImports":true,"resolveJsonModule":true}' ../../scripts/seed/index.ts
+cd services/api && \
+DATABASE_URL="postgresql://railmind_postgres_user:PASSWORD@dpg-xxxxx-a.oregon-postgres.render.com/railmind_postgres" \
+npx ts-node --transpile-only \
+  --compiler-options '{"module":"commonjs","target":"ES2020","esModuleInterop":true,"allowSyntheticDefaultImports":true,"resolveJsonModule":true}' \
+  ../../scripts/seed/index.ts
 ```
+
+> ⚠️ **Critical:** Use the **External** URL (with full hostname like `dpg-xxxxx-a.oregon-postgres.render.com`), not the Internal URL. The Internal URL only works from within Render's network.
 
 Expected output:
 ```
@@ -210,6 +211,14 @@ Expected output:
 ✅ Qdrant: 100 incidents, 30 lessons, 10 procedures vectorized
 🎉 Demo world seeded successfully!
 ```
+
+Verify seed worked:
+```bash
+curl -X POST https://railmind-api.onrender.com/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@railmind.com","password":"railmind123"}'
+```
+You should get back a JWT token — if you get `401 Invalid credentials`, the seed did not reach the production DB (wrong DATABASE_URL used).
 
 ---
 
@@ -300,12 +309,35 @@ Login with: `admin@railmind.com` / `railmind123`
 
 ## Troubleshooting
 
-### Build fails: `moduleResolution=node10 is deprecated`
-Already fixed in the repo. Make sure you have the latest code pushed (`packages/shared-types/tsconfig.json` has `"ignoreDeprecations": "6.0"`).
+### Build fails: `ERR_PNPM_OUTDATED_LOCKFILE`
+The `pnpm-lock.yaml` is out of sync. Fix locally and push:
+```bash
+pnpm install
+git add pnpm-lock.yaml
+git commit -m "fix: sync pnpm lockfile"
+git push origin main
+```
 
-### Neo4j: `authentication failure`
+### Build fails: `moduleResolution=node10 is deprecated`
+Already fixed in the repo — `packages/shared-types/tsconfig.json` has `"ignoreDeprecations": "5.0"`.
+
+### Build fails: `useSearchParams() should be wrapped in a suspense boundary`
+Already fixed in the repo — `apps/web/src/app/maintenance/new/page.tsx` wraps `useSearchParams` in `<Suspense>`.
+
+### Neo4j: `authentication failure` (app still starts fine)
+Neo4j auth failure does **not** prevent the app from starting — all other features work normally. To fix:
 - Check `NEO4J_URI` starts with `neo4j+s://` not `bolt://`
-- Re-check `NEO4J_PASSWORD` — paste carefully without quotes in Render env vars
+- The password shown at AuraDB instance creation is the only valid password — if lost, delete the instance and create a new one, copying the password immediately
+- Check for hidden leading/trailing spaces in the Render env var field
+- Neo4j is only required for the Knowledge Graph feature — Dashboard, Twin, Risk, Agents all work without it
+
+### Login returns `401 Invalid credentials` after seed
+The seed ran against the wrong database (local Docker instead of production). Always use the **External Database URL** with the full hostname when seeding from your local machine:
+```bash
+DATABASE_URL="postgresql://user:pass@dpg-xxxxx-a.oregon-postgres.render.com/railmind_postgres" \
+npx ts-node ...
+```
+Verify the URL contains `.oregon-postgres.render.com` — the Internal URL (without hostname) only works inside Render's network.
 
 ### Qdrant: `fetch failed` warnings on startup
 - Verify `QDRANT_URL` is the full HTTPS cluster URL
@@ -318,7 +350,7 @@ Already fixed in the repo. Make sure you have the latest code pushed (`packages/
 
 ### `devDependencies skipped` during build
 - This is expected when `NODE_ENV=production`
-- The build command uses `npx` to run nest/prisma so devDeps aren't needed
+- The build command uses `node_modules/.bin/` paths so devDeps aren't needed at runtime
 
 ### CORS errors on frontend
 - Set `FRONTEND_URL` in API env vars to your exact Render web URL
@@ -330,8 +362,8 @@ Add pool params to `DATABASE_URL`:
 postgresql://user:pass@host/db?connection_limit=5&pool_timeout=0
 ```
 
-### Seed fails: `Cannot connect to Neo4j`
-Run seed after both PostgreSQL AND Neo4j are connected. Check API logs for Neo4j connection status before running seed.
+### Service returns 502 Bad Gateway
+Free tier services spin down after 15 min inactivity. Go to Render → service → **Restart Service**. First request after cold start takes 30–60s.
 
 ---
 

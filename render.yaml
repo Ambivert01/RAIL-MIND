@@ -27,6 +27,7 @@ services:
       pnpm --filter @railmind/shared-types build &&
       cd services/api &&
       node_modules/.bin/prisma generate &&
+      node_modules/.bin/prisma db push &&
       node_modules/.bin/nest build
     startCommand: cd services/api && node dist/main
     healthCheckPath: /api/v1/health
