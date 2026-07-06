@@ -1,6 +1,101 @@
 # RailMind — Cognitive Railway Operating System
 
-AI-powered intelligence platform for railway infrastructure management. Combines a knowledge graph, semantic memory, multi-agent reasoning, and real-time digital twin to predict failures, investigate incidents, and generate maintenance recommendations.
+> AI-powered intelligence platform for railway infrastructure management. Turns reactive maintenance into predictive operations.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![NestJS](https://img.shields.io/badge/NestJS-10-red)](https://nestjs.com)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org)
+[![LangGraph](https://img.shields.io/badge/LangGraph-0.2-orange)](https://langchain-ai.github.io/langgraphjs)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-railmind--web.onrender.com-brightgreen)](https://railmind-web.onrender.com)
+
+---
+
+## Problem
+
+Railway signal failures cause **23% of all train delays**. Investigating a single failure takes **4–8 hours** of manual log searches. When senior engineers retire, decades of diagnostic knowledge disappear. The same signals fail for the same reasons because no system connects the dots.
+
+## Solution
+
+RailMind gives every engineer the combined knowledge of the entire organization. One question → 60-second AI pipeline → root cause + risk score + maintenance recommendation, backed by every historical incident ever recorded.
+
+---
+
+## Key Features
+
+| Feature | Description |
+|---------|-------------|
+| **Digital Twin** | Interactive Mapbox map of all 50 assets, risk-colored live |
+| **7-Agent AI Pipeline** | LangGraph StateGraph: investigate → recall → assess → recommend → plan → learn |
+| **Knowledge Graph** | Neo4j with 10 node types, 12 relationship types across all incidents |
+| **Semantic Memory** | Qdrant vector search across 6 collections — find by meaning, not keyword |
+| **Risk Intelligence** | 5-factor formula + graph propagation to connected assets |
+| **Decision Engine** | 7-layer synthesis: evidence → conflict resolution → explainability chain |
+| **Continuous Learning** | Every closed incident auto-ingested into vector memory |
+| **Real-time Streaming** | WebSocket agent thought trail — watch the AI reason step by step |
+
+---
+
+## Architecture
+
+```
+┌──────────────────────────────────────────────────────┐
+│             Next.js 15 Frontend  :3000               │
+│  Dashboard · Twin · Agents · Graph · Risk · Incidents │
+└────────────────────┬─────────────────────────────────┘
+                     │  REST + WebSocket
+┌────────────────────▼─────────────────────────────────┐
+│               NestJS API  :3001                       │
+│  16 modules · JWT · RolesGuard · Helmet · Swagger     │
+└───┬──────────────────┬──────────────┬────────────────┘
+    │                  │              │
+ PostgreSQL          Neo4j          Qdrant + Redis
+ (13 tables)    (10 node types)  (6 vector collections)
+```
+
+```
+Frontend (Next.js 15)          Backend (NestJS)              AI Layer
+─────────────────              ────────────────              ────────
+Digital Twin (Mapbox)    →     16 REST modules         →    LangGraph (7 agents)
+Knowledge Graph (ReactFlow)    WebSocket gateway             OpenAI GPT-4o-mini
+Agent Console                  Prisma ORM                    Qdrant vector search
+Risk Dashboard                                               Neo4j graph traversal
+                               Databases
+                               ──────────
+                               PostgreSQL  (facts)
+                               Neo4j       (relationships)
+                               Qdrant      (semantic memory)
+                               Redis       (cache + pub/sub)
+```
+
+---
+
+## Tech Stack
+
+**Backend:** NestJS 10 · TypeScript · Prisma 5 · LangGraph 0.2 · OpenAI GPT-4o-mini
+**Frontend:** Next.js 15 · React 19 · Tailwind CSS · ReactFlow · Mapbox GL · Recharts · Framer Motion
+**Databases:** PostgreSQL 15 · Neo4j 5 · Qdrant · Redis
+**Infrastructure:** Docker Compose · Socket.io · Turborepo · pnpm workspaces
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 15, React 19, Tailwind CSS, shadcn/ui |
+| State | Zustand + React Query |
+| Maps | Mapbox GL JS (+ fallback SVG grid) |
+| Graph UI | ReactFlow 11 |
+| Charts | Recharts |
+| Animations | Framer Motion |
+| Backend | NestJS 10, TypeScript |
+| ORM | Prisma 5 |
+| AI Orchestration | LangGraph 0.2 (StateGraph) |
+| LLM | OpenAI GPT-4o-mini |
+| Embeddings | OpenAI text-embedding-3-small |
+| Graph DB | Neo4j 5 |
+| Vector DB | Qdrant |
+| Cache | Redis |
+| Relational DB | PostgreSQL 15 |
+| Real-time | Socket.io |
+| API Docs | Swagger/OpenAPI |
+| Monorepo | Turborepo + pnpm workspaces |
 
 ---
 
@@ -17,25 +112,6 @@ AI-powered intelligence platform for railway infrastructure management. Combines
 
 ---
 
-## Architecture
-
-```
-Frontend (Next.js 14)          Backend (NestJS)              AI Layer
-─────────────────              ────────────────              ────────
-Digital Twin (Mapbox)    →     16 REST modules         →    LangGraph (7 agents)
-Knowledge Graph (ReactFlow)    WebSocket gateway             OpenAI GPT-4o-mini
-Agent Console                  Prisma ORM                    Qdrant vector search
-Risk Dashboard                                               Neo4j graph traversal
-                               Databases
-                               ──────────
-                               PostgreSQL  (facts)
-                               Neo4j       (relationships)
-                               Qdrant      (semantic memory)
-                               Redis       (cache + pub/sub)
-```
-
----
-
 ## Quick Start
 
 ### Prerequisites
@@ -47,8 +123,8 @@ Risk Dashboard                                               Neo4j graph travers
 ### 1. Clone & Install
 
 ```bash
-git clone <repo>
-cd railmind
+git clone https://github.com/Ambivert01/RAIL-MIND.git
+cd RAIL-MIND
 pnpm install
 ```
 
@@ -152,6 +228,12 @@ This runs: Neo4j graph seeding → Risk recalculation → Qdrant vector ingestio
 
 ---
 
+## Live Demo
+
+🌐 **[railmind-web.onrender.com](https://railmind-web.onrender.com)**
+
+> Free tier — cold start may take 30–60s on first request.
+
 ## Demo Credentials
 
 | Role | Email | Password |
@@ -164,7 +246,15 @@ This runs: Neo4j graph seeding → Risk recalculation → Qdrant vector ingestio
 
 ---
 
-## Demo Walkthrough (Judge Path)
+## Demo Path (Judge / Evaluator)
+
+```
+Login → Dashboard → Digital Twin → Click Signal S11
+→ Asset Profile → "Ask RailMind: Why is Signal S11 unstable?"
+→ 7 agents reason live via WebSocket → Evidence + Risk 87/100 CRITICAL + Recommendation
+→ Graph Explorer → S11 connected to 5 incidents, root causes, weather events
+→ Risk Center → Heatmap of all 50 assets
+```
 
 ### Step 1 — Dashboard
 Login as `engineer@railmind.com`. Dashboard shows:
@@ -242,6 +332,22 @@ Navigate to **Recommendations**. Shows 50 recommendations:
 
 ---
 
+## Signal S11 Demo Storyline
+
+Signal S11 at Rivergate Station has a documented failure pattern over 18 months:
+
+| Incident | Date | Issue | Severity | Status |
+|---------|------|-------|----------|--------|
+| INC-044 | 18 months ago | Relay corrosion → intermittent failure | MEDIUM | RESOLVED |
+| INC-057 | 14 months ago | Water ingress during heavy rainfall | HIGH | RESOLVED |
+| INC-081 | 10 months ago | Connector degradation → comms loss | HIGH | RESOLVED |
+| INC-061 | 8 months ago | Relay resistance drift detected | HIGH | RESOLVED |
+| INC-090 | Current | Current anomaly — active investigation | CRITICAL | INVESTIGATING |
+
+RailMind connects all 5 incidents through graph relationships, identifies the root cause pattern (relay degradation + environmental exposure), and recommends immediate relay replacement before total failure.
+
+---
+
 ## API Reference
 
 Swagger UI: `http://localhost:3001/api/v1/docs`
@@ -262,48 +368,7 @@ POST /risk/recalculate              Recalculate all asset risk scores
 
 ---
 
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Next.js 14, React 18, Tailwind CSS, shadcn/ui |
-| State | Zustand + React Query |
-| Maps | Mapbox GL JS (+ fallback SVG grid) |
-| Graph UI | ReactFlow 11 |
-| Charts | Recharts |
-| Animations | Framer Motion |
-| Backend | NestJS 10, TypeScript |
-| ORM | Prisma 5 |
-| AI Orchestration | LangGraph 0.2 (StateGraph) |
-| LLM | OpenAI GPT-4o-mini |
-| Embeddings | OpenAI text-embedding-3-small |
-| Graph DB | Neo4j 5 |
-| Vector DB | Qdrant |
-| Cache | Redis |
-| Relational DB | PostgreSQL 15 |
-| Real-time | Socket.io |
-| API Docs | Swagger/OpenAPI |
-| Monorepo | Turborepo + pnpm workspaces |
-
----
-
-## Signal S11 Demo Storyline
-
-Signal S11 at Rivergate Station has a documented failure pattern over 18 months:
-
-| Incident | Date | Issue | Severity | Status |
-|---------|------|-------|----------|--------|
-| INC-044 | 18 months ago | Relay corrosion → intermittent failure | MEDIUM | RESOLVED |
-| INC-057 | 14 months ago | Water ingress during heavy rainfall | HIGH | RESOLVED |
-| INC-081 | 10 months ago | Connector degradation → comms loss | HIGH | RESOLVED |
-| INC-061 | 8 months ago | Relay resistance drift detected | HIGH | RESOLVED |
-| INC-090 | Current | Current anomaly — active investigation | CRITICAL | INVESTIGATING |
-
-RailMind connects all 5 incidents through graph relationships, identifies the root cause pattern (relay degradation + environmental exposure), and recommends immediate relay replacement before total failure.
-
----
-
-## Project Structure
+## Folder Structure
 
 ```
 railmind/
@@ -381,11 +446,6 @@ Clear Next.js cache: `rm -rf apps/web/.next` then restart frontend.
 
 ---
 
-## Documentation Index
+## License
 
-| Document | Contents |
-|---|---|
-| [docs/Documentation.md](docs/Documentation.md) | Problem statement, 15 use cases, ROI, market context, competitive analysis, Signal S11 demo story |
-| [docs/System_Documentataion.md](docs/System_Documentataion.md) | Full A–Z technical reference: every file, module, agent, schema, and API route explained |
-| [docs/SETUP.md](docs/SETUP.md) | Complete local setup guide with all known fixes |
-| [docs/DEPLOY.md](docs/DEPLOY.md) | Deploy to Render — Neo4j AuraDB, Qdrant Cloud, PostgreSQL, Redis |
+MIT © RailMind 2024
