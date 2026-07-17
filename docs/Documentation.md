@@ -38,7 +38,7 @@ When a signal fails today, the investigation typically follows this sequence:
            (≈ 8-minute detection delay)
 
      │
-     ▼
+     p
 
 02:40 AM   Field engineer arrives on site
            (30–90 minutes travel time)
